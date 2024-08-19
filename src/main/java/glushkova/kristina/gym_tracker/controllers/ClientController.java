@@ -16,9 +16,10 @@ public class ClientController {
     private final ClientService clientService;
 
     @PostMapping
-    public void createClient(@RequestBody ClientModel client) {
+    public ResponseEntity<Void> createClient(@RequestBody ClientModel client) {
         //check if exists
         clientService.createClient(client);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
