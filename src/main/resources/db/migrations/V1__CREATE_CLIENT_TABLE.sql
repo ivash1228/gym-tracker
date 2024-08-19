@@ -1,0 +1,5 @@
+CREATE TABLE client (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    firstName VARCHAR(30) NOT NULL,
+    lastName VARCHAR(30) NOT NULL
+);
