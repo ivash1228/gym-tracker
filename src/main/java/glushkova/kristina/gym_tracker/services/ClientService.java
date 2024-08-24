@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -14,8 +15,9 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
 
-    public void createClient(ClientModel client) {
-        clientRepository.save(clientMapper.map(client));
+    public UUID createClient(String firstName, String lastName) {
+        var client = new ClientModel(null, firstName, lastName);
+        return clientRepository.save(clientMapper.map(client)).getId();
     }
 
     public List<ClientModel> getClients() {
@@ -23,4 +25,8 @@ public class ClientService {
                 .map(clientMapper::map)
                 .toList();
     }
+
+//    public ClientModel getClientById(UUID id) {
+//        return clientRepository.findById(id);
+//    }
 }
