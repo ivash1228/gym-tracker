@@ -1,7 +1,7 @@
 package glushkova.kristina.gym_tracker.controllers;
 
 import glushkova.kristina.gym_tracker.models.ClientModel;
-import glushkova.kristina.gym_tracker.models.PostClientRequest;
+import glushkova.kristina.gym_tracker.models.CreateClientRequest;
 import glushkova.kristina.gym_tracker.services.ClientService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -36,6 +36,4 @@ public class ClientController {
     public ResponseEntity<ClientModel> getClientByID(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(clientService.getClientById(id));
     }
-
-
 }

@@ -2,7 +2,7 @@ package glushkova.kristina.gym_tracker.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import glushkova.kristina.gym_tracker.models.ClientModel;
-import glushkova.kristina.gym_tracker.models.PostClientRequest;
+import glushkova.kristina.gym_tracker.models.CreateClientRequest;
 import glushkova.kristina.gym_tracker.services.ClientService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ class ClientControllerTest {
     @Test
     void shouldCreateClient() throws Exception {
         var uuid = UUID.randomUUID();
-        var requestJson = objectMapper.writeValueAsString(new PostClientRequest("First", "Last", "test@email.com"));
+        var requestJson = objectMapper.writeValueAsString(new CreateClientRequest("First", "Last", "test@email.com"));
 
         when(clientService.createClient("First", "Last", "test@email.com")).thenReturn(uuid);
 
@@ -57,5 +57,29 @@ class ClientControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(listClients)));
+    }
+
+    @Test
+    void shouldFindClientById() throws Exception {
+        var uuid = UUID.randomUUID();
+        var client = new ClientModel(uuid,"First", "Last", "test@email.com");
+
+        when(clientService.getClientById(uuid)).thenReturn(client);
+
+        mockMvc.perform(get("/clients/" + uuid))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(client)));
+    }
+
+    @Test
+    void shouldThrowBadRequestWhenFieldsAreInvalid() {
+
+
+    }
+
+    @Test
+    void shouldReturn404IfNoClientFound() {
+
     }
 }

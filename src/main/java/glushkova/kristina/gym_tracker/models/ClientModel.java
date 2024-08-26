@@ -6,6 +6,5 @@ public record ClientModel (
         UUID id,
         String firstName,
         String lastName,
-        String email)
-{}
-//add email
+        String email
+) {}
