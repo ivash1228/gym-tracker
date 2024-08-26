@@ -1,10 +1,10 @@
 package glushkova.kristina.gym_tracker.models;
 
-import lombok.Data;
+import java.util.UUID;
 
-@Data
-public class ClientModel {
-    Integer id;
-    private String firstName;
-    private String lastName;
-}
+public record ClientModel (
+        UUID id,
+        String firstName,
+        String lastName,
+        String email
+) {}

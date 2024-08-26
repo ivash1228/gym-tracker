@@ -1,25 +1,30 @@
 package glushkova.kristina.gym_tracker.controllers;
 
 import glushkova.kristina.gym_tracker.models.ClientModel;
+import glushkova.kristina.gym_tracker.models.CreateClientRequest;
 import glushkova.kristina.gym_tracker.services.ClientService;
-import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/clients")
-@RequiredArgsConstructor
 public class ClientController {
     private final ClientService clientService;
 
+    public ClientController(ClientService clientService) {
+        this.clientService = clientService;
+    }
+
     @PostMapping
-    public ResponseEntity<Void> createClient(@RequestBody ClientModel client) {
+    public ResponseEntity<UUID> createClient(@Valid @RequestBody CreateClientRequest client) {
         //check if exists
-        clientService.createClient(client);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        var uuid = clientService.createClient(client.firstName(), client.lastName(), client.email());
+        return ResponseEntity.status(HttpStatus.CREATED).body(uuid);
     }
 
     @GetMapping
@@ -27,4 +32,8 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.OK).body(clientService.getClients());
     }
 
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<ClientModel> getClientByID(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.OK).body(clientService.getClientById(id));
+    }
 }
