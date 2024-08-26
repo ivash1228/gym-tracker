@@ -1,4 +1,4 @@
-package glushkova.kristina.gym_tracker.errors;
+package glushkova.kristina.gym_tracker.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,5 +18,17 @@ public class ErrorHandler {
                         ex.getBindingResult().getAllErrors().stream()
                         .map(e -> e.getDefaultMessage())
                                 .toList());
+    }
+
+    @ExceptionHandler(ClientAlreadyExistsException.class)
+    public ResponseEntity<String> clientAlreadyExistsException(ClientAlreadyExistsException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(ClientNotFoundException.class)
+    public ResponseEntity<String> clientNotFoundException(ClientNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ex.getMessage());
     }
 }

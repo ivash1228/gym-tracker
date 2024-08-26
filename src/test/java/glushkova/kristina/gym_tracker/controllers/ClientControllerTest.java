@@ -35,9 +35,9 @@ class ClientControllerTest {
     @Test
     void shouldCreateClient() throws Exception {
         var uuid = UUID.randomUUID();
-        var requestJson = objectMapper.writeValueAsString(new PostClientRequest("First", "Last"));
+        var requestJson = objectMapper.writeValueAsString(new PostClientRequest("First", "Last", "test@email.com"));
 
-        when(clientService.createClient("First", "Last")).thenReturn(uuid);
+        when(clientService.createClient("First", "Last", "test@email.com")).thenReturn(uuid);
 
         mockMvc.perform(post("/clients")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -49,7 +49,7 @@ class ClientControllerTest {
 
     @Test
     void shouldReturnAllClients() throws Exception {
-        var listClients = List.of(new ClientModel(UUID.randomUUID(), "Sam", "White"));
+        var listClients = List.of(new ClientModel(UUID.randomUUID(), "Sam", "White", "test@email.com"));
 
         when(clientService.getClients()).thenReturn(listClients);
 

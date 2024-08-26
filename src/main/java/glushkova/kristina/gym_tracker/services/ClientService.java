@@ -1,5 +1,7 @@
 package glushkova.kristina.gym_tracker.services;
 
+import glushkova.kristina.gym_tracker.exceptions.ClientAlreadyExistsException;
+import glushkova.kristina.gym_tracker.exceptions.ClientNotFoundException;
 import glushkova.kristina.gym_tracker.mappers.ClientMapper;
 import glushkova.kristina.gym_tracker.models.ClientModel;
 import glushkova.kristina.gym_tracker.repositories.ClientRepository;
@@ -15,8 +17,9 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
 
-    public UUID createClient(String firstName, String lastName) {
-        var client = new ClientModel(null, firstName, lastName);
+    public UUID createClient(String firstName, String lastName, String email) {
+        var client = new ClientModel(null, firstName, lastName, email);
+        if (clientRepository.findByEmail(email).isPresent()) throw new ClientAlreadyExistsException(email);
         return clientRepository.save(clientMapper.map(client)).getId();
     }
 
@@ -26,7 +29,8 @@ public class ClientService {
                 .toList();
     }
 
-//    public ClientModel getClientById(UUID id) {
-//        return clientRepository.findById(id);
-//    }
+    public ClientModel getClientById(UUID id) {
+        var client = clientRepository.findById(id);
+        return clientMapper.map(client.orElseThrow(() -> new ClientNotFoundException(id)));
+    }
 }

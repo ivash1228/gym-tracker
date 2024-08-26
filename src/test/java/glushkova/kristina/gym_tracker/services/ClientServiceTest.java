@@ -26,13 +26,13 @@ class ClientServiceTest {
     void createClient() {
         var id = UUID.randomUUID();
         ClientModel client = new ClientModel(id,
-                "Sam", "White");
+                "Sam", "White", "test@email.com");
         ClientEntity clientEntity = new ClientEntity();
         clientEntity.setId(id);
 
         when(clientRepository.save(any())).thenReturn(clientEntity);
 
-        assertEquals(clientService.createClient(client.firstName(), client.lastName()), id);
+        assertEquals(clientService.createClient(client.firstName(), client.lastName(), client.email()), id);
         verify(clientRepository).save(any());
     }
 
