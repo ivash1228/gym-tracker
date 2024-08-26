@@ -21,7 +21,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<UUID> createClient(@Valid @RequestBody PostClientRequest client) {
+    public ResponseEntity<UUID> createClient(@Valid @RequestBody CreateClientRequest client) {
         //check if exists
         var uuid = clientService.createClient(client.firstName(), client.lastName(), client.email());
         return ResponseEntity.status(HttpStatus.CREATED).body(uuid);
