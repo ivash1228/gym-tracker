@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
-public record CreateWorkout (
+public record CreateWorkoutRequest(
         @NotNull(message = "workoutDate is required") LocalDate workoutDate,
         @NotNull(message = "workoutName is required") String workoutName
 ){}

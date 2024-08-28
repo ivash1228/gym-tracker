@@ -1,7 +1,7 @@
 package glushkova.kristina.gym_tracker.controllers;
 
 import glushkova.kristina.gym_tracker.mappers.WorkoutMapper;
-import glushkova.kristina.gym_tracker.models.CreateWorkout;
+import glushkova.kristina.gym_tracker.models.CreateWorkoutRequest;
 import glushkova.kristina.gym_tracker.models.WorkoutDetailsResponse;
 import glushkova.kristina.gym_tracker.models.WorkoutModel;
 import glushkova.kristina.gym_tracker.services.ExerciseService;
@@ -26,8 +26,8 @@ public class WorkoutController {
     }
 
     @PostMapping
-    public ResponseEntity<UUID> addWorkout(@PathVariable UUID clientId, @Valid @RequestBody CreateWorkout createWorkout) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(workoutService.addWorkout(clientId, createWorkout));
+    public ResponseEntity<UUID> addWorkout(@PathVariable UUID clientId, @Valid @RequestBody CreateWorkoutRequest createWorkoutRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(workoutService.addWorkout(clientId, createWorkoutRequest));
     }
 
     @GetMapping
