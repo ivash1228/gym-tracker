@@ -26,7 +26,7 @@ class ClientServiceTest {
     private final ClientService clientService = new ClientService(clientRepository, clientMapper);
 
     @Test
-    void createClient_shouldCreateClient() {
+    void createClient_WhenHappyPath_ShouldReturnUuidOfNewRecord() {
         var id = UUID.randomUUID();
         ClientModel client = new ClientModel(id,
                 "Sam", "White", "test@email.com");
@@ -40,7 +40,7 @@ class ClientServiceTest {
     }
 
     @Test
-    void createClient_shouldThrow400WhenClientAlreadyExists() {
+    void createClient_WhenClientAlreadyExists_ThrowClientAlreadyExistsException() {
         var email = "test@email.com";
         when(clientRepository.findByEmail(email)).thenReturn(Optional.of(new ClientEntity()));
         var exception = assertThrows(ClientAlreadyExistsException.class, () -> clientService.createClient("First", "Last", email));
@@ -50,7 +50,7 @@ class ClientServiceTest {
     }
 
     @Test
-    void getAllClients_shouldGetAllClients() {
+    void getAllClients_WhenHappyPath_ShouldGetAllClients() {
         var clients = List.of(new ClientEntity()
                 , new ClientEntity());
 
@@ -61,7 +61,7 @@ class ClientServiceTest {
     }
 
     @Test
-    void getClientById_shouldGetClientById() {
+    void getClientById_WhenHappyPath_ShouldGetClientById() {
         var uuid = UUID.randomUUID();
         var repositoryResponse = Optional.of(new ClientEntity());
 
@@ -72,7 +72,7 @@ class ClientServiceTest {
     }
 
     @Test
-    void getClientById_shouldThrow404WhenNoClientFound() {
+    void getClientById_WhenNoClientExistsWithProvidedUuid_shouldThrowClientNotFoundException() {
         var uuid = UUID.randomUUID();
 
         when(clientRepository.findById(uuid)).thenReturn(Optional.empty());
