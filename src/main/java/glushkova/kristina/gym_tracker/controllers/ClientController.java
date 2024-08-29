@@ -22,7 +22,6 @@ public class ClientController {
 
     @PostMapping
     public ResponseEntity<UUID> createClient(@Valid @RequestBody CreateClientRequest client) {
-        //check if exists
         var uuid = clientService.createClient(client.firstName(), client.lastName(), client.email());
         return ResponseEntity.status(HttpStatus.CREATED).body(uuid);
     }
@@ -33,7 +32,8 @@ public class ClientController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<ClientModel> getClientByID(@PathVariable UUID id) {
+    //do we need valid here to check if it is uuid
+    public ResponseEntity<ClientModel> getClientByID(@Valid @PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(clientService.getClientById(id));
     }
 }
