@@ -18,8 +18,8 @@ public class ExerciseService {
         this.exerciseMapper = exerciseMapper;
     }
 
-    public List<ExerciseModel> getExercisesByWorkoutId(UUID id) {
-        return exerciseRepository.findAllById(List.of(id))
+    public List<ExerciseModel> getExercisesByIds(List<UUID> exerciseIds) {
+        return exerciseRepository.findAllById(exerciseIds)
                 .stream()
                 .map(exerciseMapper::map)
                 .toList();

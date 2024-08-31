@@ -12,10 +12,10 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/sets")
 public class SetController {
-
-    @PostMapping
-    public ResponseEntity<UUID> addSet(@RequestBody AddSetRequest addSetRequest) {
-
-    }
+//
+//    @PostMapping
+//    public ResponseEntity<UUID> addSet(@RequestBody AddSetRequest addSetRequest) {
+//
+//    }
 
 }
