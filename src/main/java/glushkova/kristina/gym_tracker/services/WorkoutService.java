@@ -25,7 +25,7 @@ public class WorkoutService {
 
     public List<WorkoutModel> getAllWorkoutsByClientId(UUID clientId) {
         if (clientService.getClientById(clientId) == null) throw new ClientNotFoundException(clientId);
-        return workoutRepository.findAllById(List.of(clientId)).stream()
+        return workoutRepository.findByClientId(clientId).stream()
                 .map(workoutMapper::map)
                 .toList();
     }

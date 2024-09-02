@@ -1,10 +1,6 @@
 package glushkova.kristina.gym_tracker.controllers;
 
-import glushkova.kristina.gym_tracker.mappers.WorkoutMapper;
-import glushkova.kristina.gym_tracker.models.CreateWorkoutRequest;
-import glushkova.kristina.gym_tracker.models.ExerciseModel;
-import glushkova.kristina.gym_tracker.models.WorkoutDetailsResponse;
-import glushkova.kristina.gym_tracker.models.WorkoutModel;
+import glushkova.kristina.gym_tracker.models.*;
 import glushkova.kristina.gym_tracker.services.ExerciseService;
 import glushkova.kristina.gym_tracker.services.WorkoutExerciseService;
 import glushkova.kristina.gym_tracker.services.WorkoutService;
@@ -23,7 +19,7 @@ public class WorkoutController {
     private final ExerciseService exerciseService;
     private final WorkoutExerciseService workoutExerciseService;
 
-    public WorkoutController(WorkoutService workoutService, ExerciseService exerciseService, WorkoutMapper workoutMapper, WorkoutExerciseService workoutExerciseService) {
+    public WorkoutController(WorkoutService workoutService, ExerciseService exerciseService, WorkoutExerciseService workoutExerciseService) {
         this.workoutService = workoutService;
         this.exerciseService = exerciseService;
         this.workoutExerciseService = workoutExerciseService;
@@ -40,23 +36,14 @@ public class WorkoutController {
                 .body(workoutService.getAllWorkoutsByClientId(clientId));
     }
 
-    @GetMapping(path = "/{workoutId}")
-    public ResponseEntity<WorkoutDetailsResponse> getWorkoutById(@PathVariable UUID clientId, @PathVariable UUID workoutId) {
-        //should we check client?
-        var workout = workoutService.getWorkoutById(clientId, workoutId);
-        //check if this client has this workout
-        var exerciseIds = workoutExerciseService.getAllExercisesByWorkoutId(workoutId);
-
-        return ResponseEntity.status(HttpStatus.OK).body(WorkoutDetailsResponse.from(workout, exerciseService.getExercisesByIds(exerciseIds)));
-    }
-
     @PostMapping(path = "/{workoutId}")
-    public ResponseEntity<UUID> addExerciseToWorkout(@PathVariable UUID workoutId, @Valid @RequestBody UUID exerciseId) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(workoutExerciseService.saveWorkoutExerciseRecord(workoutId, exerciseId));
+    public ResponseEntity<UUID> addExerciseToWorkoutRecord(@PathVariable UUID clientId, @PathVariable UUID workoutId, @RequestBody ExerciseUuid id) {
+        //add check for client id in service
+        return ResponseEntity.status(HttpStatus.CREATED).body(workoutExerciseService.saveWorkoutExerciseRecord(workoutId, id.id()));
     }
 
-    @GetMapping
-    public ResponseEntity<List<ExerciseModel>> getAllByWorkoutId(@Valid @RequestBody UUID workoutId) {
+    @GetMapping(path = "/{workoutId}")
+    public ResponseEntity<List<ExerciseModel>> getAllExercisesForWorkout(@PathVariable UUID workoutId) {
         var exerciseIds = workoutExerciseService.getAllExercisesByWorkoutId(workoutId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(exerciseService.getExercisesByIds(exerciseIds));

@@ -9,7 +9,6 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "workout_exercise")
-@AllArgsConstructor
 public class WorkoutExerciseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
