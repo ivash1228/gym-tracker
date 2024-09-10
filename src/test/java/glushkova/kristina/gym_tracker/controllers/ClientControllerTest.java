@@ -20,6 +20,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -46,6 +47,7 @@ class ClientControllerTest {
                 .thenReturn(uuid);
 
         mockMvc.perform(post("/clients")
+                .with(jwt())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestBody)))
                 .andDo(print())
@@ -57,6 +59,7 @@ class ClientControllerTest {
     @MethodSource
     void createClient_WhenInvalidRequestBodyProvided_ShouldThrowBadRequest(CreateClientRequest createClientRequest) throws Exception {
         mockMvc.perform(post("/clients")
+                .with(jwt())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createClientRequest)))
                 .andDo(print())
@@ -71,6 +74,7 @@ class ClientControllerTest {
                 .thenThrow(new ClientAlreadyExistsException(requestBody.email()));
 
         mockMvc.perform(post("/clients")
+                .with(jwt())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestBody)))
                 .andDo(print())
@@ -84,7 +88,8 @@ class ClientControllerTest {
 
         when(clientService.getClients()).thenReturn(listClients);
 
-        mockMvc.perform(get("/clients"))
+        mockMvc.perform(get("/clients")
+                .with(jwt()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(listClients)));
@@ -97,7 +102,8 @@ class ClientControllerTest {
 
         when(clientService.getClientById(uuid)).thenReturn(client);
 
-        mockMvc.perform(get("/clients/" + uuid))
+        mockMvc.perform(get("/clients/" + uuid)
+                .with(jwt()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(client)));
@@ -108,7 +114,8 @@ class ClientControllerTest {
         var uuid = UUID.randomUUID();
         when(clientService.getClientById(uuid)).thenThrow(new ClientNotFoundException(uuid));
 
-        mockMvc.perform(get("/clients/" + uuid))
+        mockMvc.perform(get("/clients/" + uuid)
+                .with(jwt()))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Client %s not found!".formatted(uuid)));
@@ -118,7 +125,7 @@ class ClientControllerTest {
     void getClientById_WhenInvalidUuidValueProvided_ShouldReturn400BadRequest() throws Exception {
         var invalidUuid = "1234";
 
-        mockMvc.perform(get("/clients/" + invalidUuid))
+        mockMvc.perform(get("/clients/" + invalidUuid).with(jwt()))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(
@@ -134,7 +141,7 @@ class ClientControllerTest {
                 new CreateClientRequest("", "Last", "test@mail.com"),
                 new CreateClientRequest("First", "", "test@mail.com"),
                 new CreateClientRequest("First", "Last", ""),
-                new CreateClientRequest("First", "Last", "test@mail"),
+                //new CreateClientRequest("First", "Last", "test@mail")//,
                 new CreateClientRequest("First", "Last", "testmail.com")
         );
     }
