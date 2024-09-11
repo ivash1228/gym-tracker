@@ -1,5 +1,6 @@
 package glushkova.kristina.gym_tracker.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import glushkova.kristina.gym_tracker.exceptions.ClientAlreadyExistsException;
 import glushkova.kristina.gym_tracker.exceptions.ClientNotFoundException;
@@ -81,6 +82,17 @@ class ClientControllerTest {
                 .andExpect(status().isConflict())
                 .andExpect(content().string("Client with email %s already exists!".formatted(requestBody.email())));
     }
+
+//    @Test
+//    void createClient_WhenClientIsNotAuthenticated_ShouldReturn401() throws Exception {
+//        var requestBody = new CreateClientRequest("First", "Last", "test@email.com");
+//
+//        mockMvc.perform(post("/clients")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(requestBody)))
+//                .andDo(print())
+//                .andExpect(status().isUnauthorized());
+//    }
 
     @Test
     void getClients_WhenRequestSent_ShouldReturnAllClients() throws Exception {
