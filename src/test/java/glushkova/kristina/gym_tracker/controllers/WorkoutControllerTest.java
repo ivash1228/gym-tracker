@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -51,7 +52,7 @@ class WorkoutControllerTest {
         when(workoutService.addWorkout(clientId, createWorkoutRequest))
                 .thenReturn(workoutId);
 
-        mockMvc.perform(post("/clients/%s/workouts".formatted(clientId))
+        mockMvc.perform(post("/clients/%s/workouts".formatted(clientId)).with(jwt())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createWorkoutRequest)))
                 .andDo(print())
@@ -63,7 +64,7 @@ class WorkoutControllerTest {
     @ParameterizedTest
     @MethodSource
     void addWorkout_WhenInvalidBodyIsProvided_ThenShouldReturnBadRequest(CreateWorkoutRequest createWorkoutRequest) throws Exception {
-        mockMvc.perform(post("/clients/%s/workouts".formatted(UUID.randomUUID()))
+        mockMvc.perform(post("/clients/%s/workouts".formatted(UUID.randomUUID())).with(jwt())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createWorkoutRequest)))
                 .andDo(print())
@@ -81,7 +82,7 @@ class WorkoutControllerTest {
         var workoutsList = List.of(new WorkoutModel(UUID.randomUUID(), clientId, LocalDate.now(), "Upper body"));
         when(workoutService.getAllWorkoutsByClientId(clientId)).thenReturn(workoutsList);
 
-        mockMvc.perform(get("/clients/%s/workouts".formatted(clientId)))
+        mockMvc.perform(get("/clients/%s/workouts".formatted(clientId)).with(jwt()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(workoutsList)));
@@ -102,7 +103,7 @@ class WorkoutControllerTest {
         when(workoutExerciseService.saveWorkoutExerciseRecord(workoutId, exerciseId.id()))
                 .thenReturn(recordUuid);
 
-        mockMvc.perform(post("/clients/%s/workouts/%s".formatted(clientId, workoutId))
+        mockMvc.perform(post("/clients/%s/workouts/%s".formatted(clientId, workoutId)).with(jwt())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(exerciseId)))
                 .andDo(print())
