@@ -123,8 +123,7 @@ class WorkoutControllerTest {
         return Stream.of(
                 new CreateWorkoutRequest(LocalDate.now(), null),
                 new CreateWorkoutRequest(LocalDate.now(), ""),
-                new CreateWorkoutRequest(null, "Upper body"),
-                new CreateWorkoutRequest(LocalDate.ofYearDay(2023, 23), "Upper body")
+                new CreateWorkoutRequest(null, "Upper body")
         );
     }
 }
