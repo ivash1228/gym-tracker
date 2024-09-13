@@ -39,4 +39,10 @@ public class ErrorHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ex.getMessage());
     }
+
+    @ExceptionHandler(WorkoutNotFoundException.class)
+    public ResponseEntity<String> workoutNotFoundException(WorkoutNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
+    }
 }
