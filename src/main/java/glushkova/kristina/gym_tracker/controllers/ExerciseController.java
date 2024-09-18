@@ -24,4 +24,3 @@ public class ExerciseController {
         return exerciseService.getAllPossibleExercises();
     }
 }
-
