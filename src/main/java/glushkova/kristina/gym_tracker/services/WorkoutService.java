@@ -1,7 +1,6 @@
 package glushkova.kristina.gym_tracker.services;
 
 import glushkova.kristina.gym_tracker.exceptions.ClientNotFoundException;
-import glushkova.kristina.gym_tracker.exceptions.WorkoutNotFoundException;
 import glushkova.kristina.gym_tracker.mappers.WorkoutMapper;
 import glushkova.kristina.gym_tracker.models.CreateWorkoutRequest;
 import glushkova.kristina.gym_tracker.models.WorkoutModel;
@@ -24,15 +23,12 @@ public class WorkoutService {
     }
 
     public List<WorkoutModel> getAllWorkoutsByClientId(UUID clientId) {
-        if (clientService.getClientById(clientId) == null) throw new ClientNotFoundException(clientId);
+        if (clientService.getClientById(clientId) == null) {
+            throw new ClientNotFoundException(clientId);
+        }
         return workoutRepository.findByClientId(clientId).stream()
                 .map(workoutMapper::map)
                 .toList();
-    }
-
-    public WorkoutModel getWorkoutById(UUID clientId, UUID workoutId) {
-        if (clientService.getClientById(clientId) == null) throw new ClientNotFoundException(clientId);
-        return workoutMapper.map(workoutRepository.findById(workoutId).orElseThrow(() -> new WorkoutNotFoundException(workoutId)));
     }
 
     public UUID addWorkout(UUID clientId, CreateWorkoutRequest createWorkoutRequest) {
@@ -40,4 +36,5 @@ public class WorkoutService {
         var workout = new WorkoutModel(null, clientId, createWorkoutRequest.workoutDate(), createWorkoutRequest.workoutName());
         return workoutRepository.save(workoutMapper.map(workout)).getId();
     }
+    //can I use mapper to map clientWorkoutRequest straight to entity?
 }

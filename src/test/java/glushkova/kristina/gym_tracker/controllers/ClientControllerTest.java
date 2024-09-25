@@ -1,5 +1,6 @@
 package glushkova.kristina.gym_tracker.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import glushkova.kristina.gym_tracker.exceptions.ClientAlreadyExistsException;
 import glushkova.kristina.gym_tracker.exceptions.ClientNotFoundException;
@@ -20,6 +21,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -60,6 +62,7 @@ class ClientControllerTest {
     void createClient_WhenInvalidRequestBodyProvided_ShouldThrowBadRequest(CreateClientRequest createClientRequest) throws Exception {
         mockMvc.perform(post("/clients")
                 .with(jwt())
+                        .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createClientRequest)))
                 .andDo(print())
@@ -103,7 +106,8 @@ class ClientControllerTest {
         when(clientService.getClientById(uuid)).thenReturn(client);
 
         mockMvc.perform(get("/clients/" + uuid)
-                .with(jwt()))
+                .with(jwt())
+                .with(csrf()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(client)));
@@ -131,6 +135,31 @@ class ClientControllerTest {
                 .andExpect(content().string(
                         "Failed to convert value of type 'java.lang.String' to required type 'java.util.UUID'; Invalid UUID string: %s"
                                 .formatted(invalidUuid)));
+    }
+
+    @Test
+    void createClient_401() throws Exception {
+        var requestBody = new CreateClientRequest("First", "Last", "test@email.com");
+
+        mockMvc.perform(post("/clients").with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestBody)))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void getClientById_401() throws Exception {
+        mockMvc.perform(get("/clients/12").with(csrf()))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void getClients_401() throws Exception {
+        mockMvc.perform(get("/clients").with(csrf()))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
     }
 
     private static Stream<CreateClientRequest> createClient_WhenInvalidRequestBodyProvided_ShouldThrowBadRequest() {
