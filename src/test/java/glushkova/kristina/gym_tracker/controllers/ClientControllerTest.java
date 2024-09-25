@@ -141,7 +141,7 @@ class ClientControllerTest {
     void createClient_401() throws Exception {
         var requestBody = new CreateClientRequest("First", "Last", "test@email.com");
 
-        mockMvc.perform(post("/clients")
+        mockMvc.perform(post("/clients").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestBody)))
                 .andDo(print())
