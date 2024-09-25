@@ -150,15 +150,14 @@ class ClientControllerTest {
 
     @Test
     void getClientById_401() throws Exception {
-
-        mockMvc.perform(get("/clients/12"))
+        mockMvc.perform(get("/clients/12").with(csrf()))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     void getClients_401() throws Exception {
-        mockMvc.perform(get("/clients"))
+        mockMvc.perform(get("/clients").with(csrf()))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }

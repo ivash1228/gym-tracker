@@ -7,6 +7,7 @@ import glushkova.kristina.gym_tracker.models.CreateWorkoutRequest;
 import glushkova.kristina.gym_tracker.models.ExerciseModel;
 import glushkova.kristina.gym_tracker.models.ExerciseUuid;
 import glushkova.kristina.gym_tracker.models.WorkoutModel;
+import glushkova.kristina.gym_tracker.services.ClientService;
 import glushkova.kristina.gym_tracker.services.ExerciseService;
 import glushkova.kristina.gym_tracker.services.WorkoutExerciseService;
 import glushkova.kristina.gym_tracker.services.WorkoutService;
@@ -48,6 +49,8 @@ class WorkoutControllerTest {
     ExerciseService exerciseService;
     @MockBean
     WorkoutExerciseService workoutExerciseService;
+    @MockBean
+    ClientService clientService;
 
     @Test
     void addWorkout_WhenValidBodyIsProvided_ThenShouldAddWorkout() throws Exception {
@@ -105,9 +108,14 @@ class WorkoutControllerTest {
     }
 
     @Test
-    void getAllWorkoutsByClientId_WhenInvalidClientIdIsProvided_ThenShouldReturnClientNotFound(){
-        assertEquals(1,2);
+    void getAllWorkoutsByClientId_WhenInvalidClientIdIsProvided_ThenShouldReturnClientNotFound() throws Exception {
+        var clientId = UUID.randomUUID();
+        when(workoutService.getAllWorkoutsByClientId(clientId)).thenThrow(new ClientNotFoundException(clientId));
+        mockMvc.perform(get("/clients/%s/workouts".formatted(clientId)).with(jwt()).with(csrf()))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
+
     @Test
     void addExerciseToWorkout_WhenValidInfoProvided_ThenReturnRecordUuid() throws Exception {
         var clientId = UUID.randomUUID();
@@ -142,8 +150,10 @@ class WorkoutControllerTest {
     }
 
     @Test
-    void addWorkout_401() {
-        assertEquals(1,2);
+    void addWorkout_401() throws Exception {
+        mockMvc.perform(post("/clients/%s/workouts".formatted(UUID.randomUUID())).with(csrf()))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
     }
 
     private static Stream<CreateWorkoutRequest> addWorkout_WhenInvalidBodyIsProvided_ThenShouldReturnBadRequest() {
