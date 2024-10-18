@@ -47,6 +47,9 @@ jobs:
     - name: Build with Maven
       run: ./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=${{ env.IMAGE_NAME }}
 
+    - name: Docker images
+      run: docker images
+
     - name: Push Docker image
       id: push
       run: docker push ghcr.io/${{ env.IMAGE_NAME }}:latest
