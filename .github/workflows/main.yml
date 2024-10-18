@@ -45,7 +45,7 @@ jobs:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
     - name: Build with Maven
-      run: ./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=${{ env.IMAGE_NAME }}
+      run: ./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=ghcr.io/${{ env.IMAGE_NAME }}
 
     - name: Docker images
       run: docker images
