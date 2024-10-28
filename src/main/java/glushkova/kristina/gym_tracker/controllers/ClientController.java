@@ -22,7 +22,7 @@ public class ClientController {
 
     @PostMapping
     public ResponseEntity<UUID> createClient(@Valid @RequestBody CreateClientRequest client) {
-        var uuid = clientService.createClient(client.firstName(), client.lastName(), client.email());
+        var uuid = clientService.createClient(client.firstName(), client.lastName(), client.email(), client.phoneNumber());
         return ResponseEntity.status(HttpStatus.CREATED).body(uuid);
     }
 

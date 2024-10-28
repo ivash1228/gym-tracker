@@ -17,8 +17,8 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
 
-    public UUID createClient(String firstName, String lastName, String email) {
-        var client = new ClientModel(null, firstName, lastName, email);
+    public UUID createClient(String firstName, String lastName, String email, String phoneNumber) {
+        var client = new ClientModel(null, firstName, lastName, email, phoneNumber);
         if (clientRepository.findByEmail(email).isPresent()) throw new ClientAlreadyExistsException(email);
         return clientRepository.save(clientMapper.map(client)).getId();
     }

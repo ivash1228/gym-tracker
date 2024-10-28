@@ -2,6 +2,7 @@ package glushkova.kristina.gym_tracker.services;
 
 import glushkova.kristina.gym_tracker.mappers.ExerciseMapper;
 import glushkova.kristina.gym_tracker.models.ExerciseModel;
+import glushkova.kristina.gym_tracker.models.ExerciseType;
 import glushkova.kristina.gym_tracker.repositories.ExerciseRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,10 @@ public class ExerciseService {
     public ExerciseService(ExerciseRepository exerciseRepository, ExerciseMapper exerciseMapper) {
         this.exerciseRepository = exerciseRepository;
         this.exerciseMapper = exerciseMapper;
+    }
+
+    public UUID createExercise(String name, ExerciseType type) {
+        return exerciseRepository.save(exerciseMapper.map(new ExerciseModel(null, name, type))).getId();
     }
 
     public List<ExerciseModel> getExercisesByIds(List<UUID> exerciseIds) {

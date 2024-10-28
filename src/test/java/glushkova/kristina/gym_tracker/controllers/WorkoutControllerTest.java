@@ -3,10 +3,7 @@ package glushkova.kristina.gym_tracker.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import glushkova.kristina.gym_tracker.exceptions.ClientNotFoundException;
-import glushkova.kristina.gym_tracker.models.CreateWorkoutRequest;
-import glushkova.kristina.gym_tracker.models.ExerciseModel;
-import glushkova.kristina.gym_tracker.models.ExerciseUuid;
-import glushkova.kristina.gym_tracker.models.WorkoutModel;
+import glushkova.kristina.gym_tracker.models.*;
 import glushkova.kristina.gym_tracker.services.ClientService;
 import glushkova.kristina.gym_tracker.services.ExerciseService;
 import glushkova.kristina.gym_tracker.services.WorkoutExerciseService;
@@ -139,7 +136,7 @@ class WorkoutControllerTest {
     void getAllExercisesForWorkout_WhenValidWorkoutProvided_ThenAllExercisesForWorkoutReturned() throws Exception {
         var workoutId = UUID.randomUUID();
         var exerciseIds = List.of(UUID.randomUUID());
-        var exercises = List.of(new ExerciseModel(exerciseIds.getFirst(), "bench press"));
+        var exercises = List.of(new ExerciseModel(exerciseIds.getFirst(), "bench press", ExerciseType.SET));
         when(workoutExerciseService.getAllExercisesByWorkoutId(workoutId)).thenReturn(exerciseIds);
         when(exerciseService.getExercisesByIds(exerciseIds)).thenReturn(exercises);
 

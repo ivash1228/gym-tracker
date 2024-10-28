@@ -1,4 +1,5 @@
 CREATE TABLE exercise (
     id UUID PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
+    name VARCHAR(50) NOT NULL,
+    type VARCHAR(30) NOT NULL
 );
