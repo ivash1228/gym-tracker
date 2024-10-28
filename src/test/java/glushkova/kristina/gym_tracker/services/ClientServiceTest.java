@@ -25,17 +25,19 @@ class ClientServiceTest {
     private final ClientMapper clientMapper = new ClientMapperImpl();
     private final ClientService clientService = new ClientService(clientRepository, clientMapper);
 
+    UUID uuid = UUID.randomUUID();
+    ClientModel clientModel = new ClientModel(uuid,
+            "Sam", "White", "test@email.com", "+1-333-333-4444");
+
     @Test
     void createClient_WhenHappyPath_ShouldReturnUuidOfNewRecord() {
-        var id = UUID.randomUUID();
-        ClientModel client = new ClientModel(id,
-                "Sam", "White", "test@email.com");
+
         ClientEntity clientEntity = new ClientEntity();
-        clientEntity.setId(id);
+        clientEntity.setId(uuid);
 
         when(clientRepository.save(any())).thenReturn(clientEntity);
 
-        assertEquals(clientService.createClient(client.firstName(), client.lastName(), client.email()), id);
+        assertEquals(clientService.createClient(clientModel.firstName(), clientModel.lastName(), clientModel.email(), clientModel.phoneNumber()), uuid);
         verify(clientRepository).save(any());
     }
 
@@ -43,7 +45,7 @@ class ClientServiceTest {
     void createClient_WhenClientAlreadyExists_ThrowClientAlreadyExistsException() {
         var email = "test@email.com";
         when(clientRepository.findByEmail(email)).thenReturn(Optional.of(new ClientEntity()));
-        var exception = assertThrows(ClientAlreadyExistsException.class, () -> clientService.createClient("First", "Last", email));
+        var exception = assertThrows(ClientAlreadyExistsException.class, () -> clientService.createClient("First", "Last", email, "+1-333-333-4444"));
 
         assertEquals("Client with email %s already exists!".formatted(email), exception.getMessage());
         verify(clientRepository).findByEmail(email);
@@ -62,9 +64,7 @@ class ClientServiceTest {
 
     @Test
     void getClientById_WhenHappyPath_ShouldGetClientById() {
-        var uuid = UUID.randomUUID();
         var repositoryResponse = Optional.of(new ClientEntity());
-
         when(clientRepository.findById(uuid)).thenReturn(repositoryResponse);
 
         assertEquals(clientService.getClientById(uuid), clientMapper.map(repositoryResponse.get()));
@@ -73,8 +73,6 @@ class ClientServiceTest {
 
     @Test
     void getClientById_WhenNoClientExistsWithProvidedUuid_shouldThrowClientNotFoundException() {
-        var uuid = UUID.randomUUID();
-
         when(clientRepository.findById(uuid)).thenReturn(Optional.empty());
 
         var exception = assertThrows(ClientNotFoundException.class, () -> clientService.getClientById(uuid));

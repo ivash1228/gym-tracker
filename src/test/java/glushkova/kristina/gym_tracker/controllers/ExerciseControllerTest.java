@@ -2,6 +2,7 @@ package glushkova.kristina.gym_tracker.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import glushkova.kristina.gym_tracker.models.ExerciseModel;
+import glushkova.kristina.gym_tracker.models.ExerciseType;
 import glushkova.kristina.gym_tracker.services.ExerciseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,7 @@ class ExerciseControllerTest {
 
     @Test
     void getAllPossibleExercises_whenGetAllExercises_thenReturnListOfAllExercises() throws Exception {
-        var exerciseList = List.of(new ExerciseModel(UUID.randomUUID(), "bench press"));
+        var exerciseList = List.of(new ExerciseModel(UUID.randomUUID(), "bench press", ExerciseType.SET));
 
         when(exerciseService.getAllPossibleExercises()).thenReturn(exerciseList);
 

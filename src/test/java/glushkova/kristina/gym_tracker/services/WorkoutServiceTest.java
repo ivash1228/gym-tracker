@@ -31,7 +31,7 @@ class WorkoutServiceTest {
         var clientWorkouts = List.of(new WorkoutEntity());
         var uuid = UUID.randomUUID();
 
-        when(clientService.getClientById(uuid)).thenReturn(new ClientModel(null, null, null, null));
+        when(clientService.getClientById(uuid)).thenReturn(new ClientModel(null, null, null, null, null));
         when(workoutRepository.findByClientId(uuid)).thenReturn(clientWorkouts);
 
         assertEquals(1, workoutService.getAllWorkoutsByClientId(uuid).size());
@@ -55,7 +55,7 @@ class WorkoutServiceTest {
         workoutEntity.setId(UUID.randomUUID());
         var createWorkoutRequest = new CreateWorkoutRequest(LocalDate.now(), "upper body");
 
-        when(clientService.getClientById(clientUuid)).thenReturn(new ClientModel(null, null, null, null));
+        when(clientService.getClientById(clientUuid)).thenReturn(new ClientModel(null, null, null, null, null));
         when(workoutRepository.save(any())).thenReturn(workoutEntity);
 
         assertEquals(workoutEntity.getId(), workoutService.addWorkout(clientUuid, createWorkoutRequest));

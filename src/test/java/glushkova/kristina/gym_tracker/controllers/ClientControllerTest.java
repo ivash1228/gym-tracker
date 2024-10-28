@@ -1,6 +1,5 @@
 package glushkova.kristina.gym_tracker.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import glushkova.kristina.gym_tracker.exceptions.ClientAlreadyExistsException;
 import glushkova.kristina.gym_tracker.exceptions.ClientNotFoundException;
@@ -40,18 +39,20 @@ class ClientControllerTest {
     @MockBean
     ClientService clientService;
 
+    CreateClientRequest createClientRequest = new CreateClientRequest("First", "Last", "test@email.com", "+1-222-222-2222");
+    UUID uuid = UUID.randomUUID();
+    ClientModel clientModel = new ClientModel(uuid,"First", "Last", "test@email.com", "+1-222-222-2222");
+
     @Test
     void createClient_WhenValidRequestBodyProvided_ShouldCreateClient() throws Exception {
-        var uuid = UUID.randomUUID();
-        var requestBody = new CreateClientRequest("First", "Last", "test@email.com");
 
-        when(clientService.createClient(requestBody.firstName(), requestBody.lastName(), requestBody.email()))
+        when(clientService.createClient(createClientRequest.firstName(), createClientRequest.lastName(), createClientRequest.email(), createClientRequest.phoneNumber()))
                 .thenReturn(uuid);
 
         mockMvc.perform(post("/clients")
                 .with(jwt())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody)))
+                .content(objectMapper.writeValueAsString(createClientRequest)))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().json(objectMapper.writeValueAsString(uuid)));
@@ -71,23 +72,21 @@ class ClientControllerTest {
 
     @Test
     void createClient_WhenClientWithProvidedEmailExists_ShouldReturn509Conflict() throws Exception {
-        var requestBody = new CreateClientRequest("First", "Last", "test@email.com");
-
-        when(clientService.createClient(requestBody.firstName(), requestBody.lastName(), requestBody.email()))
-                .thenThrow(new ClientAlreadyExistsException(requestBody.email()));
+        when(clientService.createClient(createClientRequest.firstName(), createClientRequest.lastName(), createClientRequest.email(), createClientRequest.phoneNumber()))
+                .thenThrow(new ClientAlreadyExistsException(createClientRequest.email()));
 
         mockMvc.perform(post("/clients")
                 .with(jwt())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody)))
+                .content(objectMapper.writeValueAsString(createClientRequest)))
                 .andDo(print())
                 .andExpect(status().isConflict())
-                .andExpect(content().string("Client with email %s already exists!".formatted(requestBody.email())));
+                .andExpect(content().string("Client with email %s already exists!".formatted(createClientRequest.email())));
     }
 
     @Test
     void getClients_WhenRequestSent_ShouldReturnAllClients() throws Exception {
-        var listClients = List.of(new ClientModel(UUID.randomUUID(), "Sam", "White", "test@email.com"));
+        var listClients = List.of(clientModel);
 
         when(clientService.getClients()).thenReturn(listClients);
 
@@ -100,22 +99,18 @@ class ClientControllerTest {
 
     @Test
     void getClientById_WhenValidIdIsProvided_ShouldReturnClientById() throws Exception {
-        var uuid = UUID.randomUUID();
-        var client = new ClientModel(uuid,"First", "Last", "test@email.com");
-
-        when(clientService.getClientById(uuid)).thenReturn(client);
+        when(clientService.getClientById(uuid)).thenReturn(clientModel);
 
         mockMvc.perform(get("/clients/" + uuid)
                 .with(jwt())
                 .with(csrf()))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(client)));
+                .andExpect(content().json(objectMapper.writeValueAsString(clientModel)));
     }
 
     @Test
     void getClientById_WhenThereIsNoClientFoundByProvidedId_ShouldReturn404NotFoundStatus() throws Exception {
-        var uuid = UUID.randomUUID();
         when(clientService.getClientById(uuid)).thenThrow(new ClientNotFoundException(uuid));
 
         mockMvc.perform(get("/clients/" + uuid)
@@ -139,11 +134,10 @@ class ClientControllerTest {
 
     @Test
     void createClient_401() throws Exception {
-        var requestBody = new CreateClientRequest("First", "Last", "test@email.com");
 
         mockMvc.perform(post("/clients").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody)))
+                .content(objectMapper.writeValueAsString(createClientRequest)))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
@@ -164,14 +158,17 @@ class ClientControllerTest {
 
     private static Stream<CreateClientRequest> createClient_WhenInvalidRequestBodyProvided_ShouldThrowBadRequest() {
         return Stream.of(
-                new CreateClientRequest(null, "Last", "test@mail.com"),
-                new CreateClientRequest("First", null, "test@mail.com"),
-                new CreateClientRequest(null, "Last", null),
-                new CreateClientRequest("", "Last", "test@mail.com"),
-                new CreateClientRequest("First", "", "test@mail.com"),
-                new CreateClientRequest("First", "Last", ""),
+                new CreateClientRequest(null, "Last", "test@mail.com", "+1-222-222-2222"),
+                new CreateClientRequest("First", null, "test@mail.com", "+1-222-222-2222"),
+                new CreateClientRequest(null, "Last", null, "+1-222-222-2222"),
+                new CreateClientRequest("", "Last", "test@mail.com", "+1-222-222-2222"),
+                new CreateClientRequest("First", "", "test@mail.com", "+1-222-222-2222"),
+                new CreateClientRequest("First", "Last", "", "+1-222-222-2222"),
                 //new CreateClientRequest("First", "Last", "test@mail")//,
-                new CreateClientRequest("First", "Last", "testmail.com")
+                new CreateClientRequest("First", "Last", "test@mail.com", "+12222222222"),
+                new CreateClientRequest("First", "Last", "test@mail.com", "+1-222-222-22"),
+                new CreateClientRequest("First", "Last", "test@mail.com", null),
+                new CreateClientRequest("First", "Last", "test@mail.com", "")
         );
     }
 }
