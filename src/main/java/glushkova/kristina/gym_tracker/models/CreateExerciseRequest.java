@@ -1,9 +1,10 @@
 package glushkova.kristina.gym_tracker.models;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 public record CreateExerciseRequest (
     @NotEmpty(message = "Please provide exercise name")
     String name,
-    @NotEmpty ExerciseType type
+    @NotNull ExerciseType type
 ){}

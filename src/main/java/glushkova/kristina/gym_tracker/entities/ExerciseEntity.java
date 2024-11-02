@@ -1,5 +1,6 @@
 package glushkova.kristina.gym_tracker.entities;
 
+import glushkova.kristina.gym_tracker.models.ExerciseType;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -13,4 +14,5 @@ public class ExerciseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String name;
+    private ExerciseType type;
 }

@@ -5,5 +5,5 @@ import java.util.UUID;
 public record ExerciseModel (
         UUID id,
         String name,
-        Enum<ExerciseType> type
+        ExerciseType type
 ){}

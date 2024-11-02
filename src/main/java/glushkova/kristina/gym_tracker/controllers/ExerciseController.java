@@ -21,7 +21,7 @@ public class ExerciseController {
     }
 
     @PostMapping
-    public ResponseEntity<UUID> createExercise(@Valid CreateExerciseRequest createExerciseRequest) {
+    public ResponseEntity<UUID> createExercise(@Valid @RequestBody CreateExerciseRequest createExerciseRequest) {
         var uuid = exerciseService.createExercise(createExerciseRequest.name(), createExerciseRequest.type());
         return ResponseEntity.status(HttpStatus.CREATED).body(uuid);
     }
