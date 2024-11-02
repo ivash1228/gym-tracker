@@ -1,6 +1,7 @@
 package glushkova.kristina.gym_tracker.services;
 
 import glushkova.kristina.gym_tracker.exceptions.ClientNotFoundException;
+import glushkova.kristina.gym_tracker.exceptions.WorkoutNotFoundException;
 import glushkova.kristina.gym_tracker.mappers.WorkoutMapper;
 import glushkova.kristina.gym_tracker.models.CreateWorkoutRequest;
 import glushkova.kristina.gym_tracker.models.WorkoutModel;
@@ -8,6 +9,7 @@ import glushkova.kristina.gym_tracker.repositories.WorkoutRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,6 +37,12 @@ public class WorkoutService {
         if (clientService.getClientById(clientId) == null) throw new ClientNotFoundException(clientId);
         var workout = new WorkoutModel(null, clientId, createWorkoutRequest.workoutDate(), createWorkoutRequest.workoutName());
         return workoutRepository.save(workoutMapper.map(workout)).getId();
+    }
+
+    public Optional<WorkoutModel> getWorkoutById(UUID workoutId) {
+        var workout = workoutRepository.findById(workoutId);
+        if(workout.isEmpty()) return Optional.empty();
+        else return Optional.of(workoutMapper.map(workout.get()));
     }
     //can I use mapper to map clientWorkoutRequest straight to entity?
 }

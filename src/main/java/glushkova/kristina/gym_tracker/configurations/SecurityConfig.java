@@ -19,6 +19,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/h2/**").permitAll();
+                    authorize.requestMatchers("/h2").permitAll();
                     authorize.anyRequest().authenticated();
                 })
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
