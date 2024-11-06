@@ -13,7 +13,9 @@ public class WorkoutEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private UUID clientId;
+    @ManyToOne
+    @JoinColumn(name = "client_id", nullable = false)
+    private ClientEntity client;
     private LocalDate workoutDate;
     private String workoutName;
 }
