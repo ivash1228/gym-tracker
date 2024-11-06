@@ -1,5 +1,6 @@
 package glushkova.kristina.gym_tracker.models;
 
+import java.util.List;
 import java.util.UUID;
 
 public record ClientModel (
@@ -7,5 +8,6 @@ public record ClientModel (
         String firstName,
         String lastName,
         String email,
-        String phoneNumber
+        String phoneNumber,
+        List<WorkoutModel> workoutModelList
 ) {}
