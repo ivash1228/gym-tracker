@@ -18,7 +18,7 @@ public class ClientService {
     private final ClientMapper clientMapper;
 
     public UUID createClient(String firstName, String lastName, String email, String phoneNumber) {
-        var client = new ClientModel(null, firstName, lastName, email, phoneNumber);
+        var client = new ClientModel(null, firstName, lastName, email, phoneNumber, null);
         if (clientRepository.findByEmail(email).isPresent()) throw new ClientAlreadyExistsException(email);
         return clientRepository.save(clientMapper.map(client)).getId();
     }
@@ -30,7 +30,7 @@ public class ClientService {
     }
 
     public ClientModel getClientById(UUID id) {
-        var client = clientRepository.findById(id);
-        return clientMapper.map(client.orElseThrow(() -> new ClientNotFoundException(id)));
+        var client = clientRepository.findById(id).orElseThrow(() -> new ClientNotFoundException(id));
+        return clientMapper.map(client);
     }
 }

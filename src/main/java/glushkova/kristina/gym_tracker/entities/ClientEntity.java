@@ -21,6 +21,6 @@ public class ClientEntity {
     private String email;
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WorkoutEntity> workouts = new ArrayList<>();
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<WorkoutEntity> workouts;
 }
