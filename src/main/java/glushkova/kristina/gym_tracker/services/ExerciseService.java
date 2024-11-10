@@ -30,7 +30,7 @@ public class ExerciseService {
                 .toList();
     }
 
-    public List<ExerciseModel> getAllPossibleExercises() {
+    public List<ExerciseModel> getAllExercises() {
         return exerciseRepository.findAll().stream()
                 .map(exerciseMapper::map)
                 .toList();

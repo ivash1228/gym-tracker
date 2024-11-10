@@ -25,10 +25,8 @@ public class ExerciseController {
         var uuid = exerciseService.createExercise(createExerciseRequest.name(), createExerciseRequest.type());
         return ResponseEntity.status(HttpStatus.CREATED).body(uuid);
     }
-
-
-//    @GetMapping
-//    public List<ExerciseModel> getAllPossibleExercises() {
-//        return exerciseService.getAllPossibleExercises();
-//    }
+    @GetMapping
+    public List<ExerciseModel> getAllExercises() {
+        return exerciseService.getAllExercises();
+    }
 }
