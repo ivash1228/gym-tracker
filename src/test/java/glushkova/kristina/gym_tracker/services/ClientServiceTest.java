@@ -27,7 +27,7 @@ class ClientServiceTest {
 
     UUID uuid = UUID.randomUUID();
     ClientModel clientModel = new ClientModel(uuid,
-            "Sam", "White", "test@email.com", "+1-333-333-4444");
+            "Sam", "White", "test@email.com", "+1-333-333-4444", null);
 
     @Test
     void createClient_WhenHappyPath_ShouldReturnUuidOfNewRecord() {

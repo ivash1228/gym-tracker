@@ -26,8 +26,9 @@ public class ExerciseController {
         return ResponseEntity.status(HttpStatus.CREATED).body(uuid);
     }
 
-    @GetMapping
-    public List<ExerciseModel> getAllPossibleExercises() {
-        return exerciseService.getAllPossibleExercises();
-    }
+
+//    @GetMapping
+//    public List<ExerciseModel> getAllPossibleExercises() {
+//        return exerciseService.getAllPossibleExercises();
+//    }
 }

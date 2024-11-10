@@ -41,7 +41,7 @@ class ClientControllerTest {
 
     CreateClientRequest createClientRequest = new CreateClientRequest("First", "Last", "test@email.com", "+1-222-222-2222");
     UUID uuid = UUID.randomUUID();
-    ClientModel clientModel = new ClientModel(uuid,"First", "Last", "test@email.com", "+1-222-222-2222");
+    ClientModel clientModel = new ClientModel(uuid,"First", "Last", "test@email.com", "+1-222-222-2222", null);
 
     @Test
     void createClient_WhenValidRequestBodyProvided_ShouldCreateClient() throws Exception {

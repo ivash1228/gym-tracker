@@ -15,4 +15,7 @@ public class ExerciseEntity {
     private UUID id;
     private String name;
     private ExerciseType type;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "workout_id", nullable = false)
+    private WorkoutEntity workoutEntity;
 }
