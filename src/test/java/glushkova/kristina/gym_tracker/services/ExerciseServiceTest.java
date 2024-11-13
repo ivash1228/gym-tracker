@@ -48,7 +48,7 @@ class ExerciseServiceTest {
 
         when(exerciseRepository.findAll()).thenReturn(exerciseList);
 
-        assertEquals(3, exerciseService.getAllPossibleExercises().size());
+        assertEquals(3, exerciseService.getAllExercises().size());
         verify(exerciseRepository).findAll();
     }
 }

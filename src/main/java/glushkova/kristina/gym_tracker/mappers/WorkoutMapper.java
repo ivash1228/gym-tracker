@@ -22,5 +22,4 @@ public abstract class WorkoutMapper {
         clientEntity.setId(value);
         return clientEntity;
     }
-
 }

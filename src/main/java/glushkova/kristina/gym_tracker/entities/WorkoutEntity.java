@@ -21,6 +21,6 @@ public class WorkoutEntity {
     @JoinColumn(name = "client_id", nullable = false)
     private ClientEntity client;
 
-    @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<ExerciseEntity> exerciseEntityList;
+    @OneToMany(mappedBy = "workout", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<ExerciseEntity> exercises;
 }

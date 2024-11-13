@@ -6,5 +6,5 @@ public record ExerciseModel (
         UUID id,
         String name,
         ExerciseType type,
-        WorkoutModel workout
+        UUID workoutId
 ){}

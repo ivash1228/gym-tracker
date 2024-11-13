@@ -6,7 +6,7 @@ public record WorkoutExerciseModel(
         UUID id,
         UUID workoutId,
         UUID exerciseId,
-        Integer order,
+        Integer exerciseOrder,
         Integer sets,
         Integer weights,
         Integer repsCount

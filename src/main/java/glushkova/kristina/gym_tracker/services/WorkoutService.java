@@ -35,7 +35,7 @@ public class WorkoutService {
 
     public UUID addWorkout(UUID clientId, CreateWorkoutRequest createWorkoutRequest) {
         if (clientService.getClientById(clientId) == null) throw new ClientNotFoundException(clientId);
-        var workout = new WorkoutModel(null, clientId, createWorkoutRequest.workoutDate(), createWorkoutRequest.workoutName());
+        var workout = new WorkoutModel(null, clientId, createWorkoutRequest.workoutDate(), createWorkoutRequest.workoutName(), null);
         return workoutRepository.save(workoutMapper.map(workout)).getId();
     }
 

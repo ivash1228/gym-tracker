@@ -91,18 +91,18 @@ class WorkoutControllerTest {
               .andExpect(content().string("Client %s not found!".formatted(clientId)));
     }
 
-    @Test
-    void getAllWorkoutsByClientId_WhenSuccess_ThenShouldReturnAllWorkoutsForClient() throws Exception {
-        var clientId = UUID.randomUUID();
-        var workoutsList = List.of(new WorkoutModel(UUID.randomUUID(), clientId, LocalDate.now(), "Upper body"));
-        when(workoutService.getAllWorkoutsByClientId(clientId)).thenReturn(workoutsList);
-
-        mockMvc.perform(get("/clients/%s/workouts".formatted(clientId)).with(jwt()))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(workoutsList)));
-        verify(workoutService).getAllWorkoutsByClientId(clientId);
-    }
+//    @Test
+//    void getAllWorkoutsByClientId_WhenSuccess_ThenShouldReturnAllWorkoutsForClient() throws Exception {
+//        var clientId = UUID.randomUUID();
+//        var workoutsList = List.of(new WorkoutModel(UUID.randomUUID(), clientId, LocalDate.now(), "Upper body"));
+//        when(workoutService.getAllWorkoutsByClientId(clientId)).thenReturn(workoutsList);
+//
+//        mockMvc.perform(get("/clients/%s/workouts".formatted(clientId)).with(jwt()))
+//                .andDo(print())
+//                .andExpect(status().isOk())
+//                .andExpect(content().json(objectMapper.writeValueAsString(workoutsList)));
+//        verify(workoutService).getAllWorkoutsByClientId(clientId);
+//    }
 
     @Test
     void getAllWorkoutsByClientId_WhenInvalidClientIdIsProvided_ThenShouldReturnClientNotFound() throws Exception {

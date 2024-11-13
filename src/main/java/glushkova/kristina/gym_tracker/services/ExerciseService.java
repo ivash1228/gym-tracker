@@ -1,5 +1,6 @@
 package glushkova.kristina.gym_tracker.services;
 
+import glushkova.kristina.gym_tracker.exceptions.ExerciseNotFoundException;
 import glushkova.kristina.gym_tracker.mappers.ExerciseMapper;
 import glushkova.kristina.gym_tracker.models.ExerciseModel;
 import glushkova.kristina.gym_tracker.models.ExerciseType;
@@ -20,14 +21,13 @@ public class ExerciseService {
     }
 
     public UUID createExercise(String name, ExerciseType type) {
-        return exerciseRepository.save(exerciseMapper.map(new ExerciseModel(null, name, type))).getId();
+        return exerciseRepository.save(exerciseMapper.map(new ExerciseModel(null, name, type, null))).getId();
     }
 
-    public List<ExerciseModel> getExercisesByIds(List<UUID> exerciseIds) {
-        return exerciseRepository.findAllById(exerciseIds)
+    public ExerciseModel getExerciseById(UUID exerciseId) {
+        return exerciseRepository.findAllById(List.of(exerciseId))
                 .stream()
-                .map(exerciseMapper::map)
-                .toList();
+                .map(exerciseMapper::map).findFirst().orElseThrow(() -> new ExerciseNotFoundException(exerciseId));
     }
 
     public List<ExerciseModel> getAllExercises() {

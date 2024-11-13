@@ -25,8 +25,14 @@ public class ExerciseController {
         var uuid = exerciseService.createExercise(createExerciseRequest.name(), createExerciseRequest.type());
         return ResponseEntity.status(HttpStatus.CREATED).body(uuid);
     }
+
     @GetMapping
     public List<ExerciseModel> getAllExercises() {
         return exerciseService.getAllExercises();
+    }
+
+    @GetMapping(path = "/{exerciseId}")
+    public ExerciseModel getExerciseById(@PathVariable UUID exerciseId) {
+        return exerciseService.getExerciseById(exerciseId);
     }
 }

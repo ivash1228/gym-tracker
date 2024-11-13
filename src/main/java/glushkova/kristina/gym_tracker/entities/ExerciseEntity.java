@@ -4,6 +4,7 @@ import glushkova.kristina.gym_tracker.models.ExerciseType;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -15,7 +16,8 @@ public class ExerciseEntity {
     private UUID id;
     private String name;
     private ExerciseType type;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "workout_id", nullable = false)
-    private WorkoutEntity workoutEntity;
+    private WorkoutEntity workout;
 }

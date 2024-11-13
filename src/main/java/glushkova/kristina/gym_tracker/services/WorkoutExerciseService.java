@@ -19,8 +19,8 @@ public class WorkoutExerciseService {
         this.workoutExerciseMapper = workoutExerciseMapper;
     }
 
-    public UUID saveWorkoutExerciseRecord(UUID workoutUuid, UUID exerciseUuid) {
-        var workoutExerciseRecord = new WorkoutExerciseModel(null, workoutUuid, exerciseUuid);
+    public UUID saveWorkoutExerciseRecord(UUID workoutUuid, UUID exerciseUuid, Integer order, Integer sets, Integer repCount, Integer weight) {
+        var workoutExerciseRecord = new WorkoutExerciseModel(null, workoutUuid, exerciseUuid, order, sets,repCount, weight);
         return workoutExerciseRepository.save(workoutExerciseMapper.map(workoutExerciseRecord)).getId();
     }
 
