@@ -1,6 +1,7 @@
 package glushkova.kristina.gym_tracker.services;
 
 import glushkova.kristina.gym_tracker.entities.ExerciseEntity;
+import glushkova.kristina.gym_tracker.exceptions.ExerciseNotFoundException;
 import glushkova.kristina.gym_tracker.mappers.ExerciseMapper;
 import glushkova.kristina.gym_tracker.mappers.ExerciseMapperImpl;
 import glushkova.kristina.gym_tracker.repositories.ExerciseRepository;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,24 +23,25 @@ class ExerciseServiceTest {
     ExerciseService exerciseService = new ExerciseService(exerciseRepository, exerciseMapper);
 
     @Test
-    void getExercisesByIds_whenValidListProvided_thenReturnsListOfExercises() {
-        var idsList = List.of(UUID.randomUUID());
-        var exerciseList = List.of(new ExerciseEntity());
+    void getExerciseById_whenValidUuidProvided_thenReturnsExercise() {
+        var exerciseId = UUID.randomUUID();
+        var exercise = new ExerciseEntity();
+        exercise.setId(exerciseId);
 
-        when(exerciseRepository.findAllById(idsList)).thenReturn(exerciseList);
+        when(exerciseRepository.findById(exerciseId)).thenReturn(Optional.of(exercise));
 
-        assertEquals(1, exerciseService.getExercisesByIds(idsList).size());
-        verify(exerciseRepository).findAllById(idsList);
+        assertEquals(exerciseId, exerciseService.getExerciseById(exerciseId).id());
+        verify(exerciseRepository).findById(exerciseId);
     }
 
     @Test
-    void getExercisesByIds_whenNonExistingUuidProvided_thenReturnsEmptyList() {
-        var idsList = List.of(UUID.randomUUID());
+    void getExerciseById_whenNonExistingUuidProvided_thenThrowsException() {
+        var exerciseId = UUID.randomUUID();
 
-        when(exerciseRepository.findAllById(idsList)).thenReturn(List.of());
+        when(exerciseRepository.findById(exerciseId)).thenReturn(Optional.empty());
 
-        assertEquals(0, exerciseService.getExercisesByIds(idsList).size());
-        verify(exerciseRepository).findAllById(idsList);
+        assertThrows(ExerciseNotFoundException.class, () -> exerciseService.getExerciseById(exerciseId) );
+        verify(exerciseRepository).findById(exerciseId);
     }
 
 

@@ -1,9 +1,8 @@
 package glushkova.kristina.gym_tracker.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import glushkova.kristina.gym_tracker.exceptions.ClientNotFoundException;
-import glushkova.kristina.gym_tracker.models.*;
+import glushkova.kristina.gym_tracker.models.postModels.CreateWorkoutRequest;
 import glushkova.kristina.gym_tracker.services.ClientService;
 import glushkova.kristina.gym_tracker.services.ExerciseService;
 import glushkova.kristina.gym_tracker.services.WorkoutExerciseService;
@@ -18,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 

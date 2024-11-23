@@ -20,7 +20,4 @@ public class WorkoutEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "client_id", nullable = false)
     private ClientEntity client;
-
-    @OneToMany(mappedBy = "workout", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<ExerciseEntity> exercises;
 }

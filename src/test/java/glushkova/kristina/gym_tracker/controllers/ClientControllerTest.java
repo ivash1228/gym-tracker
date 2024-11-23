@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import glushkova.kristina.gym_tracker.exceptions.ClientAlreadyExistsException;
 import glushkova.kristina.gym_tracker.exceptions.ClientNotFoundException;
 import glushkova.kristina.gym_tracker.models.ClientModel;
-import glushkova.kristina.gym_tracker.models.CreateClientRequest;
+import glushkova.kristina.gym_tracker.models.postModels.CreateClientRequest;
 import glushkova.kristina.gym_tracker.services.ClientService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

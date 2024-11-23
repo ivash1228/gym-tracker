@@ -1,9 +1,8 @@
 package glushkova.kristina.gym_tracker.services;
 
 import glushkova.kristina.gym_tracker.exceptions.ClientNotFoundException;
-import glushkova.kristina.gym_tracker.exceptions.WorkoutNotFoundException;
 import glushkova.kristina.gym_tracker.mappers.WorkoutMapper;
-import glushkova.kristina.gym_tracker.models.CreateWorkoutRequest;
+import glushkova.kristina.gym_tracker.models.postModels.CreateWorkoutRequest;
 import glushkova.kristina.gym_tracker.models.WorkoutModel;
 import glushkova.kristina.gym_tracker.repositories.WorkoutRepository;
 import org.springframework.stereotype.Service;
@@ -35,7 +34,7 @@ public class WorkoutService {
 
     public UUID addWorkout(UUID clientId, CreateWorkoutRequest createWorkoutRequest) {
         if (clientService.getClientById(clientId) == null) throw new ClientNotFoundException(clientId);
-        var workout = new WorkoutModel(null, clientId, createWorkoutRequest.workoutDate(), createWorkoutRequest.workoutName(), null);
+        var workout = new WorkoutModel(null, clientId, createWorkoutRequest.workoutDate(), createWorkoutRequest.workoutName());
         return workoutRepository.save(workoutMapper.map(workout)).getId();
     }
 

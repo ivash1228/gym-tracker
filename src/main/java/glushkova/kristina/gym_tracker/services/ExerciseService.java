@@ -21,13 +21,11 @@ public class ExerciseService {
     }
 
     public UUID createExercise(String name, ExerciseType type) {
-        return exerciseRepository.save(exerciseMapper.map(new ExerciseModel(null, name, type, null))).getId();
+        return exerciseRepository.save(exerciseMapper.map(new ExerciseModel(null, name, type))).getId();
     }
 
     public ExerciseModel getExerciseById(UUID exerciseId) {
-        return exerciseRepository.findAllById(List.of(exerciseId))
-                .stream()
-                .map(exerciseMapper::map).findFirst().orElseThrow(() -> new ExerciseNotFoundException(exerciseId));
+        return exerciseMapper.map(exerciseRepository.findById(exerciseId).orElseThrow(() -> new ExerciseNotFoundException(exerciseId)));
     }
 
     public List<ExerciseModel> getAllExercises() {

@@ -5,7 +5,7 @@ import glushkova.kristina.gym_tracker.exceptions.ClientNotFoundException;
 import glushkova.kristina.gym_tracker.mappers.WorkoutMapper;
 import glushkova.kristina.gym_tracker.mappers.WorkoutMapperImpl;
 import glushkova.kristina.gym_tracker.models.ClientModel;
-import glushkova.kristina.gym_tracker.models.CreateWorkoutRequest;
+import glushkova.kristina.gym_tracker.models.postModels.CreateWorkoutRequest;
 import glushkova.kristina.gym_tracker.repositories.WorkoutRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

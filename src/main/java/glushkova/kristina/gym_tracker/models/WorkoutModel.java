@@ -8,6 +8,5 @@ public record WorkoutModel (
         UUID id,
         UUID clientId,
         LocalDate workoutDate,
-        String workoutName,
-        List<ExerciseModel> exercises
+        String workoutName
 ) {}

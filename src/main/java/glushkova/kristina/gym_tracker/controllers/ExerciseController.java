@@ -1,6 +1,6 @@
 package glushkova.kristina.gym_tracker.controllers;
 
-import glushkova.kristina.gym_tracker.models.CreateExerciseRequest;
+import glushkova.kristina.gym_tracker.models.postModels.CreateExerciseRequest;
 import glushkova.kristina.gym_tracker.models.ExerciseModel;
 import glushkova.kristina.gym_tracker.services.ExerciseService;
 import jakarta.validation.Valid;
