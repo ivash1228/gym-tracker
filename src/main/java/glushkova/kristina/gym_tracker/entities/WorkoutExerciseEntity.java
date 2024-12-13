@@ -15,4 +15,8 @@ public class WorkoutExerciseEntity {
     private UUID id;
     private UUID workoutId;
     private UUID exerciseId;
+    private Integer exerciseOrder;
+    private Integer sets;
+    private Integer weights;
+    private Integer repsCount;
 }

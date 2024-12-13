@@ -4,6 +4,7 @@ import glushkova.kristina.gym_tracker.models.ExerciseType;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data

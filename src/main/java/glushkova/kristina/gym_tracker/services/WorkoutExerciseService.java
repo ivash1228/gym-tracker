@@ -2,6 +2,7 @@ package glushkova.kristina.gym_tracker.services;
 
 import glushkova.kristina.gym_tracker.entities.WorkoutExerciseEntity;
 import glushkova.kristina.gym_tracker.mappers.WorkoutExerciseMapper;
+import glushkova.kristina.gym_tracker.models.ExerciseModel;
 import glushkova.kristina.gym_tracker.models.WorkoutExerciseModel;
 import glushkova.kristina.gym_tracker.repositories.WorkoutExerciseRepository;
 import org.springframework.stereotype.Service;
@@ -19,13 +20,19 @@ public class WorkoutExerciseService {
         this.workoutExerciseMapper = workoutExerciseMapper;
     }
 
-    public UUID saveWorkoutExerciseRecord(UUID workoutUuid, UUID exerciseUuid) {
-        var workoutExerciseRecord = new WorkoutExerciseModel(null, workoutUuid, exerciseUuid);
+    public UUID saveWorkoutExerciseRecord(UUID workoutUuid, UUID exerciseUuid, Integer order, Integer sets, Integer repCount, Integer weight) {
+        var workoutExerciseRecord = new WorkoutExerciseModel(null, workoutUuid, exerciseUuid, order, sets,repCount, weight);
         return workoutExerciseRepository.save(workoutExerciseMapper.map(workoutExerciseRecord)).getId();
     }
 
-    public List<UUID> getAllExercisesByWorkoutId(UUID workoutId) {
+    public List<WorkoutExerciseModel> getAllExercisesByWorkoutId(UUID workoutId) {
         return workoutExerciseRepository.findByWorkoutId(workoutId).stream()
-                .map(WorkoutExerciseEntity::getExerciseId).toList();
+                .map(workoutExerciseMapper::map).toList();
+               // .map(WorkoutExerciseEntity::getExerciseId).toList();
     }
+
+//    public List<WorkoutExerciseModel> getAllExercisesForWorkoutByIds(List<UUID> exerciseIds) {
+//        return workoutExerciseRepository.findAllById(exerciseIds).stream()
+//                .map(workoutExerciseMapper::map).toList();
+//    }
 }

@@ -5,5 +5,9 @@ import java.util.UUID;
 public record WorkoutExerciseModel(
         UUID id,
         UUID workoutId,
-        UUID exerciseId
+        UUID exerciseId,
+        Integer exerciseOrder,
+        Integer sets,
+        Integer weights,
+        Integer repsCount
 ) {}

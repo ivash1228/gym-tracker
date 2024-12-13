@@ -19,6 +19,9 @@ public class SecurityConfig implements WebMvcConfigurer {
         http
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2/**")))
+                .headers(headers -> {
+                    headers.frameOptions().disable();
+                })
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/h2/**").permitAll();
                     authorize.requestMatchers("/h2").permitAll();

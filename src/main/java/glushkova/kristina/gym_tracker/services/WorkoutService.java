@@ -1,9 +1,8 @@
 package glushkova.kristina.gym_tracker.services;
 
 import glushkova.kristina.gym_tracker.exceptions.ClientNotFoundException;
-import glushkova.kristina.gym_tracker.exceptions.WorkoutNotFoundException;
 import glushkova.kristina.gym_tracker.mappers.WorkoutMapper;
-import glushkova.kristina.gym_tracker.models.CreateWorkoutRequest;
+import glushkova.kristina.gym_tracker.models.postModels.CreateWorkoutRequest;
 import glushkova.kristina.gym_tracker.models.WorkoutModel;
 import glushkova.kristina.gym_tracker.repositories.WorkoutRepository;
 import org.springframework.stereotype.Service;

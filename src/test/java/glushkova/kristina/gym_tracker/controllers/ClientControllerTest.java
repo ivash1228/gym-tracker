@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import glushkova.kristina.gym_tracker.exceptions.ClientAlreadyExistsException;
 import glushkova.kristina.gym_tracker.exceptions.ClientNotFoundException;
 import glushkova.kristina.gym_tracker.models.ClientModel;
-import glushkova.kristina.gym_tracker.models.CreateClientRequest;
+import glushkova.kristina.gym_tracker.models.postModels.CreateClientRequest;
 import glushkova.kristina.gym_tracker.services.ClientService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -41,7 +41,7 @@ class ClientControllerTest {
 
     CreateClientRequest createClientRequest = new CreateClientRequest("First", "Last", "test@email.com", "+1-222-222-2222");
     UUID uuid = UUID.randomUUID();
-    ClientModel clientModel = new ClientModel(uuid,"First", "Last", "test@email.com", "+1-222-222-2222");
+    ClientModel clientModel = new ClientModel(uuid,"First", "Last", "test@email.com", "+1-222-222-2222", null);
 
     @Test
     void createClient_WhenValidRequestBodyProvided_ShouldCreateClient() throws Exception {

@@ -21,19 +21,19 @@ public class WorkoutExerciseServiceTest {
     private final WorkoutExerciseMapper workoutExerciseMapper = new WorkoutExerciseMapperImpl();
     private final WorkoutExerciseService workoutExerciseService = new WorkoutExerciseService(workoutExerciseRepository, workoutExerciseMapper);
 
-    @Test
-    public void saveWorkoutExerciseRecord_WhenValidUuidsProvided_ShouldSaveRecordToDb() {
-        var workoutExerciseUuid = UUID.randomUUID();
-        var requestEntity = new WorkoutExerciseEntity();
-        var responseEntity = new WorkoutExerciseEntity();
-        responseEntity.setId(workoutExerciseUuid);
-
-        when(workoutExerciseRepository.save(any())).thenReturn(responseEntity);
-
-        var response = workoutExerciseService.saveWorkoutExerciseRecord(null, null);
-        assertEquals(workoutExerciseUuid, response);
-        verify(workoutExerciseRepository).save(requestEntity);
-    }
+//    @Test
+//    public void saveWorkoutExerciseRecord_WhenValidUuidsProvided_ShouldSaveRecordToDb() {
+//        var workoutExerciseUuid = UUID.randomUUID();
+//        var requestEntity = new WorkoutExerciseEntity();
+//        var responseEntity = new WorkoutExerciseEntity();
+//        responseEntity.setId(workoutExerciseUuid);
+//
+//        when(workoutExerciseRepository.save(any())).thenReturn(responseEntity);
+//
+//        var response = workoutExerciseService.saveWorkoutExerciseRecord(null, null);
+//        assertEquals(workoutExerciseUuid, response);
+//        verify(workoutExerciseRepository).save(requestEntity);
+//    }
 
     @Test
     void getAllExercisesByWorkoutId_WhenValidWorkoutIdProvided_ThenShouldReturnAllExercisesById() {

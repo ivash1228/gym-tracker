@@ -1,4 +1,7 @@
-package glushkova.kristina.gym_tracker.models;
+package glushkova.kristina.gym_tracker.models.responseModels;
+
+import glushkova.kristina.gym_tracker.models.ExerciseModel;
+import glushkova.kristina.gym_tracker.models.WorkoutModel;
 
 import java.time.LocalDate;
 import java.util.List;

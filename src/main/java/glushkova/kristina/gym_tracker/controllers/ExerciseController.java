@@ -1,6 +1,6 @@
 package glushkova.kristina.gym_tracker.controllers;
 
-import glushkova.kristina.gym_tracker.models.CreateExerciseRequest;
+import glushkova.kristina.gym_tracker.models.postModels.CreateExerciseRequest;
 import glushkova.kristina.gym_tracker.models.ExerciseModel;
 import glushkova.kristina.gym_tracker.services.ExerciseService;
 import jakarta.validation.Valid;
@@ -27,7 +27,12 @@ public class ExerciseController {
     }
 
     @GetMapping
-    public List<ExerciseModel> getAllPossibleExercises() {
-        return exerciseService.getAllPossibleExercises();
+    public List<ExerciseModel> getAllExercises() {
+        return exerciseService.getAllExercises();
+    }
+
+    @GetMapping(path = "/{exerciseId}")
+    public ExerciseModel getExerciseById(@PathVariable UUID exerciseId) {
+        return exerciseService.getExerciseById(exerciseId);
     }
 }
