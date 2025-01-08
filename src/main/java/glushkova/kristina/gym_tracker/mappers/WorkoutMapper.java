@@ -2,8 +2,8 @@ package glushkova.kristina.gym_tracker.mappers;
 
 import glushkova.kristina.gym_tracker.entities.ClientEntity;
 import glushkova.kristina.gym_tracker.entities.WorkoutEntity;
-import glushkova.kristina.gym_tracker.models.ClientModel;
 import glushkova.kristina.gym_tracker.models.WorkoutModel;
+import glushkova.kristina.gym_tracker.models.postModels.CreateWorkoutRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;

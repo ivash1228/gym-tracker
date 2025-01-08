@@ -1,5 +1,6 @@
 package glushkova.kristina.gym_tracker.models;
 
+import java.util.List;
 import java.util.UUID;
 
 public record WorkoutExerciseModel(
@@ -7,7 +8,6 @@ public record WorkoutExerciseModel(
         UUID workoutId,
         UUID exerciseId,
         Integer exerciseOrder,
-        Integer sets,
-        Integer weights,
-        Integer repsCount
+        //optional field - not all exc has sets
+        List<SetModel> exercise_sets
 ) {}
