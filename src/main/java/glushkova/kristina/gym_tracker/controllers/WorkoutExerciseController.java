@@ -1,13 +1,14 @@
 package glushkova.kristina.gym_tracker.controllers;
 
-import glushkova.kristina.gym_tracker.models.postModels.CreateExerciseDetails;
+import glushkova.kristina.gym_tracker.models.WorkoutExerciseModel;
+import glushkova.kristina.gym_tracker.models.postModels.CreateWorkoutExerciseRequest;
 import glushkova.kristina.gym_tracker.services.WorkoutExerciseService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -16,13 +17,19 @@ import java.util.UUID;
 public class WorkoutExerciseController {
     private final WorkoutExerciseService workoutExerciseService;
 
-    @PostMapping(path = "/{exerciseId}")
-    public ResponseEntity<UUID> addExerciseToWorkout(@PathVariable UUID workoutId,
-                                                     @PathVariable UUID exerciseId,
-                                                     @Valid @RequestBody CreateExerciseDetails exerciseDetails) {
-            var recordUuid = workoutExerciseService.saveWorkoutExerciseRecord(workoutId, exerciseId, exerciseDetails.exerciseOrder(),
-                    exerciseDetails.sets(), exerciseDetails.repsCount(), exerciseDetails.weights());
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(recordUuid);
+    @PostMapping
+    public ResponseEntity<UUID> addExerciseToWorkout(@PathVariable UUID clientId,
+                                                     @PathVariable UUID workoutId,
+                                                     @RequestBody CreateWorkoutExerciseRequest exerciseId) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(workoutExerciseService.saveWorkoutExerciseRecord(clientId, workoutId, exerciseId.exerciseId()).id());
+    }
+
+    //TODO two issues here - workoutExercise id is null inside set (mapper?) and we dont need sets in the response here
+    @GetMapping
+    public ResponseEntity<List<WorkoutExerciseModel>> getWorkoutExercises(@PathVariable UUID clientId, @PathVariable UUID workoutId) {
+        var exerciseIds = workoutExerciseService.getAllExercisesByWorkoutId(workoutId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(exerciseIds);
     }
 }

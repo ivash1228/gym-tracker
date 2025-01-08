@@ -17,10 +17,11 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
 
-    public UUID createClient(String firstName, String lastName, String email, String phoneNumber) {
+    public ClientModel createClient(String firstName, String lastName, String email, String phoneNumber) {
         var client = new ClientModel(null, firstName, lastName, email, phoneNumber, null);
         if (clientRepository.findByEmail(email).isPresent()) throw new ClientAlreadyExistsException(email);
-        return clientRepository.save(clientMapper.map(client)).getId();
+        var result = clientRepository.save(clientMapper.map(client));
+        return clientMapper.map(result);
     }
 
     public List<ClientModel> getClients() {

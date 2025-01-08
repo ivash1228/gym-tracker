@@ -1,17 +1,20 @@
 package glushkova.kristina.gym_tracker.models.responseModels;
 
-import glushkova.kristina.gym_tracker.models.ExerciseModel;
-import glushkova.kristina.gym_tracker.models.WorkoutModel;
+import glushkova.kristina.gym_tracker.models.SetModel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
-public record WorkoutDetailsResponse(
-        String name,
-        LocalDate workoutDate,
-        List<ExerciseModel> exerciseList
-){
-    public static WorkoutDetailsResponse from(WorkoutModel workoutModel, List<ExerciseModel> exerciseList) {
-        return new WorkoutDetailsResponse(workoutModel.workoutName(), workoutModel.workoutDate(), exerciseList);
-    }
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class WorkoutDetailsResponse {
+    private Map<String, List<SetModel>> orderedExercisesWithSets;
 }
+
+

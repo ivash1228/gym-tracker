@@ -1,10 +1,7 @@
 package glushkova.kristina.gym_tracker.controllers;
 
-import glushkova.kristina.gym_tracker.exceptions.WorkoutNotFoundException;
-import glushkova.kristina.gym_tracker.models.*;
+import glushkova.kristina.gym_tracker.models.WorkoutModel;
 import glushkova.kristina.gym_tracker.models.postModels.CreateWorkoutRequest;
-import glushkova.kristina.gym_tracker.services.ExerciseService;
-import glushkova.kristina.gym_tracker.services.WorkoutExerciseService;
 import glushkova.kristina.gym_tracker.services.WorkoutService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -18,36 +15,27 @@ import java.util.UUID;
 @RequestMapping("/clients/{clientId}/workouts")
 public class WorkoutController {
     private final WorkoutService workoutService;
-  //  private final ExerciseService exerciseService;
-    private final WorkoutExerciseService workoutExerciseService;
 
-    public WorkoutController(WorkoutService workoutService, ExerciseService exerciseService, WorkoutExerciseService workoutExerciseService) {
+    public WorkoutController(WorkoutService workoutService) {
         this.workoutService = workoutService;
-      //  this.exerciseService = exerciseService;
-        this.workoutExerciseService = workoutExerciseService;
     }
 
     @PostMapping
     public ResponseEntity<UUID> addWorkout(@PathVariable UUID clientId, @Valid @RequestBody CreateWorkoutRequest createWorkoutRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(workoutService.addWorkout(clientId, createWorkoutRequest));
+        var createdWorkoutId = workoutService.addWorkout(clientId, createWorkoutRequest.workoutDate(), createWorkoutRequest.workoutName()).getId();
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdWorkoutId);
     }
 
     @GetMapping
-    public ResponseEntity<List<WorkoutModel>> getAllWorkoutsByClientId(@PathVariable UUID clientId) {
+    public ResponseEntity<List<WorkoutModel>> getAllWorkoutsForClient(@PathVariable UUID clientId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(workoutService.getAllWorkoutsByClientId(clientId));
     }
 
-//    @GetMapping(path = "/{workoutId}")
-//    public ResponseEntity<WorkoutModel> getWorkoutById(@PathVariable UUID clientId, @PathVariable UUID workoutId) {
-//        return ResponseEntity.status(HttpStatus.OK)
-//                .body(workoutService.getWorkoutById(workoutId).orElseThrow(() -> new WorkoutNotFoundException(workoutId)));
-//    }
-
     @GetMapping(path = "/{workoutId}")
-    public ResponseEntity<List<WorkoutExerciseModel>> getAllExercisesForWorkout(@PathVariable UUID workoutId) {
-        var exerciseIds = workoutExerciseService.getAllExercisesByWorkoutId(workoutId);
+    public ResponseEntity<?> getFullWorkout(@PathVariable UUID clientId, @PathVariable UUID workoutId) {
+        var fullWorkout = workoutService.getFullWorkoutById(clientId, workoutId);
         return ResponseEntity.status(HttpStatus.OK)
-               .body(exerciseIds);
+                .body(fullWorkout);
     }
 }

@@ -20,8 +20,9 @@ public class ExerciseService {
         this.exerciseMapper = exerciseMapper;
     }
 
-    public UUID createExercise(String name, ExerciseType type) {
-        return exerciseRepository.save(exerciseMapper.map(new ExerciseModel(null, name, type))).getId();
+    public ExerciseModel createExercise(String name, ExerciseType type) {
+        var saveExercise = exerciseMapper.map(new ExerciseModel(null, name, type));
+        return exerciseMapper.map(exerciseRepository.save(saveExercise));
     }
 
     public ExerciseModel getExerciseById(UUID exerciseId) {

@@ -1,12 +1,12 @@
 package glushkova.kristina.gym_tracker.services;
 
-import glushkova.kristina.gym_tracker.exceptions.ClientNotFoundException;
+import glushkova.kristina.gym_tracker.entities.WorkoutEntity;
 import glushkova.kristina.gym_tracker.mappers.WorkoutMapper;
-import glushkova.kristina.gym_tracker.models.postModels.CreateWorkoutRequest;
 import glushkova.kristina.gym_tracker.models.WorkoutModel;
 import glushkova.kristina.gym_tracker.repositories.WorkoutRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,26 +16,33 @@ public class WorkoutService {
     private final WorkoutRepository workoutRepository;
     private final ClientService clientService;
     private final WorkoutMapper workoutMapper;
+    private final WorkoutExerciseService workoutExerciseService;
 
-    public WorkoutService(WorkoutRepository workoutRepository, ClientService clientService, WorkoutMapper workoutMapper) {
+    public WorkoutService(WorkoutRepository workoutRepository, ClientService clientService, WorkoutMapper workoutMapper, WorkoutExerciseService workoutExerciseService) {
         this.workoutRepository = workoutRepository;
         this.clientService = clientService;
         this.workoutMapper = workoutMapper;
+        this.workoutExerciseService = workoutExerciseService;
+    }
+
+    public WorkoutModel addWorkout(UUID clientId, LocalDate workoutDate, String workoutName) {
+        WorkoutModel createWorkout = new WorkoutModel(null, clientId, workoutDate, workoutName);
+        clientService.getClientById(clientId);
+        WorkoutEntity createdWorkout = workoutRepository.save(workoutMapper.map(createWorkout));
+        return workoutMapper.map(createdWorkout);
     }
 
     public List<WorkoutModel> getAllWorkoutsByClientId(UUID clientId) {
-        if (clientService.getClientById(clientId) == null) {
-            throw new ClientNotFoundException(clientId);
-        }
+        clientService.getClientById(clientId);
         return workoutRepository.findByClientId(clientId).stream()
                 .map(workoutMapper::map)
                 .toList();
     }
 
-    public UUID addWorkout(UUID clientId, CreateWorkoutRequest createWorkoutRequest) {
-        if (clientService.getClientById(clientId) == null) throw new ClientNotFoundException(clientId);
-        var workout = new WorkoutModel(null, clientId, createWorkoutRequest.workoutDate(), createWorkoutRequest.workoutName());
-        return workoutRepository.save(workoutMapper.map(workout)).getId();
+    public Object getFullWorkoutById(UUID clientId, UUID workoutId) {
+        clientService.getClientById(clientId);
+        getWorkoutById(workoutId);
+        return workoutExerciseService.getFullWorkout(clientId, workoutId);
     }
 
     public Optional<WorkoutModel> getWorkoutById(UUID workoutId) {
@@ -43,5 +50,4 @@ public class WorkoutService {
         if(workout.isEmpty()) return Optional.empty();
         else return Optional.of(workoutMapper.map(workout.get()));
     }
-    //can I use mapper to map clientWorkoutRequest straight to entity?
 }

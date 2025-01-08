@@ -22,8 +22,13 @@ public class ExerciseController {
 
     @PostMapping
     public ResponseEntity<UUID> createExercise(@Valid @RequestBody CreateExerciseRequest createExerciseRequest) {
-        var uuid = exerciseService.createExercise(createExerciseRequest.name(), createExerciseRequest.type());
-        return ResponseEntity.status(HttpStatus.CREATED).body(uuid);
+        var createdExercise = exerciseService.createExercise(createExerciseRequest.name(), createExerciseRequest.type());
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdExercise.id());
+    }
+
+    @GetMapping(path = "/{exerciseId}")
+    public ExerciseModel getExerciseById(@PathVariable UUID exerciseId) {
+        return exerciseService.getExerciseById(exerciseId);
     }
 
     @GetMapping
@@ -31,8 +36,5 @@ public class ExerciseController {
         return exerciseService.getAllExercises();
     }
 
-    @GetMapping(path = "/{exerciseId}")
-    public ExerciseModel getExerciseById(@PathVariable UUID exerciseId) {
-        return exerciseService.getExerciseById(exerciseId);
-    }
+
 }
