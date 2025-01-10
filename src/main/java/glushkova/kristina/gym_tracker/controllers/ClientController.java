@@ -1,7 +1,7 @@
 package glushkova.kristina.gym_tracker.controllers;
 
 import glushkova.kristina.gym_tracker.models.ClientModel;
-import glushkova.kristina.gym_tracker.models.postModels.CreateClientRequest;
+import glushkova.kristina.gym_tracker.models.postModels.ClientRequestBody;
 import glushkova.kristina.gym_tracker.services.ClientService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -21,8 +21,8 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<UUID> createClient(@Valid @RequestBody CreateClientRequest client) {
-        var createdClient = clientService.createClient(client.firstName(), client.lastName(), client.email(), client.phoneNumber());
+    public ResponseEntity<UUID> createClient(@Valid @RequestBody ClientRequestBody.CreateClientRequest client) {
+        var createdClient = clientService.createClient(client.getFirstName(), client.getLastName(), client.getEmail(), client.getPhoneNumber());
         return ResponseEntity.status(HttpStatus.CREATED).body(createdClient.id());
     }
 
@@ -31,9 +31,15 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.OK).body(clientService.getClients());
     }
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "/{clientId}")
     //do we need valid here to check if it is uuid
-    public ResponseEntity<ClientModel> getClientByID(@Valid @PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(clientService.getClientById(id));
+    public ResponseEntity<ClientModel> getClientByID(@Valid @PathVariable UUID clientId) {
+        return ResponseEntity.status(HttpStatus.OK).body(clientService.getClientById(clientId));
+    }
+
+    @PutMapping(path = "/{clientId}")
+    public ResponseEntity<ClientModel> updateClientEmail(@Valid @PathVariable UUID clientId,
+                                                         @Valid @RequestBody ClientRequestBody.UpdateClientEmail clientEmail) {
+        return ResponseEntity.status(HttpStatus.OK).body(clientService.updateClientEmail(clientId, clientEmail.getEmail()));
     }
 }

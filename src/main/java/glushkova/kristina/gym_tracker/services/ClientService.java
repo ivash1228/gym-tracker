@@ -1,7 +1,9 @@
 package glushkova.kristina.gym_tracker.services;
 
+import glushkova.kristina.gym_tracker.entities.ClientEntity;
 import glushkova.kristina.gym_tracker.exceptions.ClientAlreadyExistsException;
 import glushkova.kristina.gym_tracker.exceptions.ClientNotFoundException;
+import glushkova.kristina.gym_tracker.exceptions.EmailAlreadyExistsException;
 import glushkova.kristina.gym_tracker.mappers.ClientMapper;
 import glushkova.kristina.gym_tracker.models.ClientModel;
 import glushkova.kristina.gym_tracker.repositories.ClientRepository;
@@ -18,10 +20,9 @@ public class ClientService {
     private final ClientMapper clientMapper;
 
     public ClientModel createClient(String firstName, String lastName, String email, String phoneNumber) {
-        var client = new ClientModel(null, firstName, lastName, email, phoneNumber, null);
+        var client = new ClientEntity(null, firstName, lastName, email, phoneNumber, null);
         if (clientRepository.findByEmail(email).isPresent()) throw new ClientAlreadyExistsException(email);
-        var result = clientRepository.save(clientMapper.map(client));
-        return clientMapper.map(result);
+        return clientMapper.map(clientRepository.save(client));
     }
 
     public List<ClientModel> getClients() {
@@ -30,8 +31,14 @@ public class ClientService {
                 .toList();
     }
 
-    public ClientModel getClientById(UUID id) {
-        var client = clientRepository.findById(id).orElseThrow(() -> new ClientNotFoundException(id));
+    public ClientModel getClientById(UUID uuid) {
+        var client = clientRepository.findById(uuid).orElseThrow(() -> new ClientNotFoundException(uuid));
         return clientMapper.map(client);
+    }
+
+    public ClientModel updateClientEmail(UUID clientId, String email) {
+        var client = clientRepository.findById(clientId).orElseThrow(() -> new ClientNotFoundException(clientId));
+        if(client.getEmail().equals(email)) throw new EmailAlreadyExistsException(email);
+        return clientMapper.map(clientRepository.save(client.setEmail(email)));
     }
 }
