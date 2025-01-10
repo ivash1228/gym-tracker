@@ -29,7 +29,8 @@ public class WorkoutExerciseService {
 
     public WorkoutExerciseModel saveWorkoutExerciseRecord(UUID clientId, UUID workoutUuid, UUID exerciseUuid) {
         //replace with calling exercise service and add client and workout uuid validations
-        validate(exerciseUuid);
+        //validate(exerciseUuid);
+        exerciseService.getExerciseById(exerciseUuid);
         var order = getAllExercisesByWorkoutId(workoutUuid).size() + 1;
         var workoutExerciseRecord = new WorkoutExerciseModel(null, workoutUuid, exerciseUuid, order, null);
         var savedRecord = workoutExerciseRepository.save(workoutExerciseMapper.map(workoutExerciseRecord));

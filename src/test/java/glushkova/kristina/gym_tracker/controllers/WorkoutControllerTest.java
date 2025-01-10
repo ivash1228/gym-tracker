@@ -2,6 +2,7 @@ package glushkova.kristina.gym_tracker.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import glushkova.kristina.gym_tracker.exceptions.ClientNotFoundException;
+import glushkova.kristina.gym_tracker.models.WorkoutModel;
 import glushkova.kristina.gym_tracker.models.postModels.CreateWorkoutRequest;
 import glushkova.kristina.gym_tracker.services.ClientService;
 import glushkova.kristina.gym_tracker.services.ExerciseService;
@@ -17,11 +18,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -40,21 +40,16 @@ class WorkoutControllerTest {
     ObjectMapper objectMapper;
     @MockBean
     WorkoutService workoutService;
-    @MockBean
-    ExerciseService exerciseService;
-    @MockBean
-    WorkoutExerciseService workoutExerciseService;
-    @MockBean
-    ClientService clientService;
 
     @Test
     void addWorkout_WhenValidBodyIsProvided_ThenShouldAddWorkout() throws Exception {
         var clientId = UUID.randomUUID();
         var workoutId = UUID.randomUUID();
         var createWorkoutRequest = new CreateWorkoutRequest(LocalDate.now(), "Upper body");
+        var workoutModel = new WorkoutModel(workoutId, clientId, LocalDate.now(), "Upper body");
 
-        when(workoutService.addWorkout(clientId, createWorkoutRequest))
-                .thenReturn(workoutId);
+        when(workoutService.addWorkout(clientId, createWorkoutRequest.workoutDate(), createWorkoutRequest.workoutName()))
+                .thenReturn(workoutModel);
 
         mockMvc.perform(post("/clients/%s/workouts".formatted(clientId)).with(jwt())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -62,7 +57,7 @@ class WorkoutControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().json(objectMapper.writeValueAsString(workoutId)));
-        verify(workoutService).addWorkout(clientId, createWorkoutRequest);
+        verify(workoutService).addWorkout(clientId, createWorkoutRequest.workoutDate(), createWorkoutRequest.workoutName());
     }
 
     @ParameterizedTest
@@ -79,7 +74,8 @@ class WorkoutControllerTest {
     void addWorkout_WhenInvalidClientIdIsProvided_ThenShouldReturn404ClientNotFound() throws Exception {
         var clientId = UUID.randomUUID();
         var createWorkoutRequest = new CreateWorkoutRequest(LocalDate.now(), "Upper body");
-        when(workoutService.addWorkout(clientId, createWorkoutRequest)).thenThrow(new ClientNotFoundException(clientId));
+        when(workoutService.addWorkout(clientId, createWorkoutRequest.workoutDate(), createWorkoutRequest.workoutName()))
+                .thenThrow(new ClientNotFoundException(clientId));
 
       mockMvc.perform(post("/clients/%s/workouts".formatted(clientId)).with(jwt())
               .contentType(MediaType.APPLICATION_JSON)
@@ -89,21 +85,21 @@ class WorkoutControllerTest {
               .andExpect(content().string("Client %s not found!".formatted(clientId)));
     }
 
-//    @Test
-//    void getAllWorkoutsByClientId_WhenSuccess_ThenShouldReturnAllWorkoutsForClient() throws Exception {
-//        var clientId = UUID.randomUUID();
-//        var workoutsList = List.of(new WorkoutModel(UUID.randomUUID(), clientId, LocalDate.now(), "Upper body"));
-//        when(workoutService.getAllWorkoutsByClientId(clientId)).thenReturn(workoutsList);
-//
-//        mockMvc.perform(get("/clients/%s/workouts".formatted(clientId)).with(jwt()))
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(content().json(objectMapper.writeValueAsString(workoutsList)));
-//        verify(workoutService).getAllWorkoutsByClientId(clientId);
-//    }
+    @Test
+    void getAllWorkoutsByClientId_WhenSuccess_ThenShouldReturnAllWorkoutsForClient() throws Exception {
+        var clientId = UUID.randomUUID();
+        var workoutsList = List.of(new WorkoutModel(UUID.randomUUID(), clientId, LocalDate.now(), "Upper body"));
+        when(workoutService.getAllWorkoutsByClientId(clientId)).thenReturn(workoutsList);
+
+        mockMvc.perform(get("/clients/%s/workouts".formatted(clientId)).with(jwt()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(workoutsList)));
+        verify(workoutService).getAllWorkoutsByClientId(clientId);
+    }
 
     @Test
-    void getAllWorkoutsByClientId_WhenInvalidClientIdIsProvided_ThenShouldReturnClientNotFound() throws Exception {
+    void getAllWorkoutsForClientId_WhenInvalidClientIdIsProvided_ThenShouldReturnClientNotFound() throws Exception {
         var clientId = UUID.randomUUID();
         when(workoutService.getAllWorkoutsByClientId(clientId)).thenThrow(new ClientNotFoundException(clientId));
         mockMvc.perform(get("/clients/%s/workouts".formatted(clientId)).with(jwt()).with(csrf()))
@@ -116,9 +112,9 @@ class WorkoutControllerTest {
 //        var clientId = UUID.randomUUID();
 //        var workoutId = UUID.randomUUID();
 //        var recordUuid = UUID.randomUUID();
-//        var exerciseId = new ExerciseUuid(UUID.randomUUID());
+//        var exerciseId = UUID.randomUUID();
 //
-//        when(workoutExerciseService.saveWorkoutExerciseRecord(workoutId, exerciseId.id()))
+//        when(workoutExerciseService.saveWorkoutExerciseRecord(workoutId, exerciseId))
 //                .thenReturn(recordUuid);
 //
 //        mockMvc.perform(post("/clients/%s/workouts/%s".formatted(clientId, workoutId)).with(jwt())
@@ -127,7 +123,7 @@ class WorkoutControllerTest {
 //                .andDo(print())
 //                .andExpect(status().isCreated())
 //                .andExpect(content().json(objectMapper.writeValueAsString(recordUuid)));
-//        verify(workoutExerciseService).saveWorkoutExerciseRecord(workoutId, exerciseId.id());
+//        verify(workoutExerciseService).saveWorkoutExerciseRecord(workoutId, exerciseId);
 //    }
 
 //    @Test

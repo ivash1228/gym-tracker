@@ -4,6 +4,7 @@ import glushkova.kristina.gym_tracker.entities.ExerciseEntity;
 import glushkova.kristina.gym_tracker.exceptions.ExerciseNotFoundException;
 import glushkova.kristina.gym_tracker.mappers.ExerciseMapper;
 import glushkova.kristina.gym_tracker.mappers.ExerciseMapperImpl;
+import glushkova.kristina.gym_tracker.models.ExerciseType;
 import glushkova.kristina.gym_tracker.repositories.ExerciseRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -13,6 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -21,6 +23,26 @@ class ExerciseServiceTest {
     ExerciseRepository exerciseRepository = Mockito.mock(ExerciseRepository.class);
     ExerciseMapper exerciseMapper = new ExerciseMapperImpl();
     ExerciseService exerciseService = new ExerciseService(exerciseRepository, exerciseMapper);
+
+    String name = "Bench Press";
+    ExerciseType typeSet = ExerciseType.SET;
+    UUID exerciseId = UUID.randomUUID();
+
+    @Test
+    void createExercise_whenHappyPath_then200AndUuidReturned() {
+
+
+        var exerciseEntity = new ExerciseEntity();
+        exerciseEntity.setId(exerciseId);
+        exerciseEntity.setType(typeSet);
+        exerciseEntity.setName(name);
+
+        when(exerciseRepository.save(any())).thenReturn(exerciseEntity);
+
+        var result = exerciseService.createExercise(name, typeSet);
+        assertEquals(exerciseId, result.id());
+        verify(exerciseRepository).save(any());
+    }
 
     @Test
     void getExerciseById_whenValidUuidProvided_thenReturnsExercise() {
