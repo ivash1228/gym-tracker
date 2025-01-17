@@ -37,7 +37,7 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.OK).body(clientService.getClientById(clientId));
     }
 
-    @PutMapping(path = "/{clientId}")
+    @PutMapping(path = "/{clientId}/email")
     public ResponseEntity<ClientModel> updateClientEmail(@Valid @PathVariable UUID clientId,
                                                          @Valid @RequestBody ClientRequestBody.UpdateClientEmail clientEmail) {
         return ResponseEntity.status(HttpStatus.OK).body(clientService.updateClientEmail(clientId, clientEmail.getEmail()));

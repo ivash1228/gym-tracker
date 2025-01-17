@@ -1,5 +1,6 @@
 package glushkova.kristina.gym_tracker.controllers;
 
+import glushkova.kristina.gym_tracker.exceptions.ExerciseAlreadyExistsOnWorkoutException;
 import glushkova.kristina.gym_tracker.models.WorkoutExerciseModel;
 import glushkova.kristina.gym_tracker.models.postModels.CreateWorkoutExerciseRequest;
 import glushkova.kristina.gym_tracker.services.WorkoutExerciseService;
@@ -20,7 +21,7 @@ public class WorkoutExerciseController {
     @PostMapping
     public ResponseEntity<UUID> addExerciseToWorkout(@PathVariable UUID clientId,
                                                      @PathVariable UUID workoutId,
-                                                     @RequestBody CreateWorkoutExerciseRequest exerciseId) {
+                                                     @RequestBody CreateWorkoutExerciseRequest exerciseId) throws ExerciseAlreadyExistsOnWorkoutException {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(workoutExerciseService.saveWorkoutExerciseRecord(clientId, workoutId, exerciseId.exerciseId()).id());
     }

@@ -57,5 +57,11 @@ public class ErrorHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(ex.getMessage());
     }
+
+    @ExceptionHandler(ExerciseAlreadyExistsOnWorkoutException.class)
+    public ResponseEntity<String> exerciseAlreadyExistsOnWorkoutException(ExerciseAlreadyExistsOnWorkoutException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ex.getMessage());
+    }
 }
 
