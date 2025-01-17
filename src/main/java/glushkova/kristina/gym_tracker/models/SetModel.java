@@ -8,4 +8,10 @@ public record SetModel (
     Integer weights,
     Integer reps,
     Integer setOrder
-) {}
+) {
+    public static SetModel from (SetModel setModel, UUID workoutExerciseId) {
+        return new SetModel(
+                setModel.id, workoutExerciseId, setModel.weights, setModel.reps, setModel.setOrder
+        );
+    }
+}

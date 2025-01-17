@@ -21,8 +21,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -153,7 +152,9 @@ class ClientControllerTest {
 
     @Test
     void getClients_401() throws Exception {
-        mockMvc.perform(get("/clients").with(csrf()))
+        mockMvc.perform(get("/clients")
+                        .with(anonymous())
+                        .with(csrf()))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
@@ -167,7 +168,7 @@ class ClientControllerTest {
 
         when(clientService.updateClientEmail(uuid, newEmail)).thenReturn(expected);
 
-        mockMvc.perform(put("/clients/" + uuid)
+        mockMvc.perform(put("/clients/%s/email".formatted(uuid))
                 .with(jwt())
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -183,7 +184,7 @@ class ClientControllerTest {
 
         when(clientService.updateClientEmail(uuid, emailUpdateRequest.getEmail())).thenThrow(new EmailAlreadyExistsException(emailUpdateRequest.getEmail()));
 
-        mockMvc.perform(put("/clients/" + uuid)
+        mockMvc.perform(put("/clients/%s/email".formatted(uuid))
                 .with(jwt())
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)

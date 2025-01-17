@@ -10,4 +10,5 @@ public record WorkoutExerciseModel(
         Integer exerciseOrder,
         //optional field - not all exc has sets
         List<SetModel> exercise_sets
-) {}
+) {
+}
