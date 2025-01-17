@@ -168,7 +168,7 @@ class ClientControllerTest {
 
         when(clientService.updateClientEmail(uuid, newEmail)).thenReturn(expected);
 
-        mockMvc.perform(put("/clients/" + uuid)
+        mockMvc.perform(put("/clients/%s/email".formatted(uuid))
                 .with(jwt())
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -184,7 +184,7 @@ class ClientControllerTest {
 
         when(clientService.updateClientEmail(uuid, emailUpdateRequest.getEmail())).thenThrow(new EmailAlreadyExistsException(emailUpdateRequest.getEmail()));
 
-        mockMvc.perform(put("/clients/" + uuid)
+        mockMvc.perform(put("/clients/%s/email".formatted(uuid))
                 .with(jwt())
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
