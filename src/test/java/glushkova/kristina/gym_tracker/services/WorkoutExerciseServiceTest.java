@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import java.util.List;
 import java.util.UUID;
 
 import static glushkova.kristina.gym_tracker.models.ExerciseType.SET;
@@ -52,19 +53,18 @@ public class WorkoutExerciseServiceTest {
         assertThatThrownBy(() -> workoutExerciseService.saveWorkoutExerciseRecord(clientId, workoutId, exerciseId)).isInstanceOf(ExerciseAlreadyExistsOnWorkoutException.class);
     }
 
-//    @Test
-//    void getAllExercisesByWorkoutId_WhenValidWorkoutIdProvided_ThenShouldReturnAllExercisesById() {
-//        var exerciseUuid = UUID.randomUUID();
-//        var entity = new WorkoutExerciseEntity();
-//        entity.setExerciseId(exerciseUuid);
-//        var listOfExercises = List.of(entity);
-//        var uuid = UUID.randomUUID();
-//
-//        when(workoutExerciseRepository.findByWorkoutId(any())).thenReturn(listOfExercises);
-//
-//        var response = workoutExerciseService.getAllExercisesByWorkoutId(uuid);
-//        assertEquals(response.size(), 1);
-//        assertEquals(response.getFirst(), exerciseUuid);
-//        verify(workoutExerciseRepository).findByWorkoutId(uuid);
-//    }
+    @Test
+    void getAllExercisesByWorkoutId_WhenValidWorkoutIdProvided_ThenShouldReturnAllExercises() {
+        var workoutUuid = UUID.randomUUID();
+        var exerciseUuid = UUID.randomUUID();
+        var entity = new WorkoutExerciseEntity(UUID.randomUUID(), workoutUuid, exerciseUuid, 1, null);
+        var listOfExercises = List.of(entity);
+
+        when(workoutExerciseRepository.findByWorkoutId(any())).thenReturn(listOfExercises);
+
+        var response = workoutExerciseService.getAllExercisesByWorkoutId(workoutUuid);
+        assertEquals(1, response.size());
+        assertEquals(exerciseUuid, response.getFirst().exerciseId());
+        verify(workoutExerciseRepository).findByWorkoutId(workoutUuid);
+    }
 }

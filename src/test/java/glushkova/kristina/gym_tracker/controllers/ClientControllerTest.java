@@ -210,8 +210,8 @@ class ClientControllerTest {
                         ("First", "", "test@mail.com", "+1-222-222-2222"),
                 new ClientRequestBody.CreateClientRequest
                         ("First", "Last", "", "+1-222-222-2222"),
-                //new ClientRequestBody.CreateClientRequest
-                // ("First", "Last", "test@mail")//,
+                new ClientRequestBody.CreateClientRequest
+                        ("First", "Last", "invalid-email", "+1-222-222-2222"),
                 new ClientRequestBody.CreateClientRequest
                         ("First", "Last", "test@mail.com", "+12222222222"),
                 new ClientRequestBody.CreateClientRequest
