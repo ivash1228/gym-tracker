@@ -26,6 +26,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/h2/**").permitAll();
                     authorize.requestMatchers("/h2").permitAll();
+                    authorize.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll();
+                    authorize.requestMatchers("/actuator/health").permitAll();
                     authorize.anyRequest().authenticated();
                 })
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
