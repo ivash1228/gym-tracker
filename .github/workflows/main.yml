@@ -52,4 +52,4 @@ jobs:
 
     - name: Push Docker image
       id: push
-      run: docker push ghcr.io/${{ env.IMAGE_NAME }}:latest
+      run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
