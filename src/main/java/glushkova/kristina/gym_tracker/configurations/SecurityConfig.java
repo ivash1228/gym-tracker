@@ -6,6 +6,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -21,13 +22,13 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2/**")))
                 .headers(headers -> {
-                    headers.frameOptions().disable();
+                    headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable);
                 })
                 .authorizeHttpRequests(authorize -> {
+                    authorize.requestMatchers("/actuator/health").permitAll();
                     authorize.requestMatchers("/h2/**").permitAll();
                     authorize.requestMatchers("/h2").permitAll();
                     authorize.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll();
-                    authorize.requestMatchers("/actuator/health").permitAll();
                     authorize.anyRequest().authenticated();
                 })
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
