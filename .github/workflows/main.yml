@@ -38,19 +38,18 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Build jar
+      run: mvn -B clean package
+
     - name: Extract metadata (tags, labels) for Docker
       id: meta
       uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-    - name: Build with Maven
-      run: ./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=ghcr.io/${{ env.IMAGE_NAME }}
-
-    - name: Docker images
-      run: docker images
+    - name: Build from Dockerfile
+      run: docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} .
 
     - name: Push Docker image
       id: push
-      run: docker push ghcr.io/${{ env.IMAGE_NAME }}:latest
-
+      run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
