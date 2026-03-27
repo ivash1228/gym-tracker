@@ -54,3 +54,12 @@ jobs:
       id: push
       run: docker push ghcr.io/${{ env.IMAGE_NAME }}:latest
 
+  trigger-tests:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.TESTS_REPO_PAT }}
+          repository: ivash1228/gym-tracker-test
+          event-type: be-updated
