@@ -21,6 +21,4 @@ public abstract class SetMapper {
         workoutExerciseEntity.setId(value);
         return workoutExerciseEntity;
     }
-
-
 }

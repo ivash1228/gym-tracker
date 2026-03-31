@@ -5,7 +5,7 @@ import glushkova.kristina.gym_tracker.models.WorkoutExerciseModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = SetMapper.class)
 public abstract class WorkoutExerciseMapper {
     public abstract WorkoutExerciseModel map(WorkoutExerciseEntity workoutExerciseEntity);
     public abstract WorkoutExerciseEntity map(WorkoutExerciseModel workoutExerciseModel);
